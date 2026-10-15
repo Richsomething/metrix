@@ -16,51 +16,92 @@ const pct = (value: number | null): string =>
   value === null ? '—' : `${pctFormat.format(value * 100)}%`;
 const money = (value: number): string => `${formatInteger(value)} ₽`;
 
-/** АВ rates by line: base → this quarter → next quarter forecast → next quarter if the plan is met. */
+/** «1 договор», «3 договора», «5 договоров». */
+function contractsWord(n: number): string {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return 'договор';
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'договора';
+  return 'договоров';
+}
+
+/**
+ * АВ rates by line: this quarter → next quarter forecast → next quarter if the plan is met.
+ * Each bar is labeled with the contracts behind its rate (quarter T's rate comes from the sales of T−1).
+ */
 export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
   const series = [
-    { name: 'База', values: r.rates.map((x) => x.base) },
-    { name: r.quarter, values: r.rates.map((x) => x.current) },
-    { name: `${r.nextQuarter} прогноз`, values: r.rates.map((x) => x.next) },
-    { name: `${r.nextQuarter} с планом`, values: r.rates.map((x) => x.nextWithPlan) },
+    {
+      name: r.quarter,
+      color: t.series[1],
+      rates: r.rates.map((x) => x.current),
+      contracts: r.rates.map((x) => x.contracts.current),
+    },
+    {
+      name: `${r.nextQuarter} прогноз`,
+      color: t.series[2],
+      rates: r.rates.map((x) => x.next),
+      contracts: r.rates.map((x) => x.contracts.next),
+    },
+    {
+      name: `${r.nextQuarter} с планом`,
+      color: t.series[3],
+      rates: r.rates.map((x) => x.nextWithPlan),
+      contracts: r.rates.map((x) => x.contracts.nextWithPlan),
+    },
   ];
   return {
     option: {
       ...baseOption(t),
-      grid: { left: 8, right: 16, top: 36, bottom: 8, containLabel: true },
+      grid: { left: 8, right: 16, top: 44, bottom: 8, containLabel: true },
       legend: legend(t),
       tooltip: {
         ...baseOption(t).tooltip,
         trigger: 'axis',
         axisPointer: { type: 'shadow' },
-        valueFormatter: (v) => pct(v === null || v === undefined ? null : Number(v)),
+        formatter: (params: unknown) => {
+          const items = params as { dataIndex: number; seriesIndex: number; marker: string }[];
+          const i = items[0].dataIndex;
+          const lines = items.map((p) => {
+            const s = series[p.seriesIndex];
+            const n = s.contracts[i];
+            return `${p.marker}${s.name}: <b>${pct(s.rates[i])}</b> · ${formatInteger(n)} ${contractsWord(n)}`;
+          });
+          return [`<b>${r.rates[i].title}</b>`, ...lines].join('<br>');
+        },
       },
       xAxis: categoryAxis(
         t,
         r.rates.map((x) => x.title),
       ),
-      yAxis: valueAxis(t, (v) => pct(v)),
-      series: series.map((s, index) => ({
+      yAxis: {
+        ...valueAxis(t, (v) => pct(v)),
+        name: '% КВ',
+        nameTextStyle: { color: t.muted, fontSize: 12 },
+      },
+      series: series.map((s) => ({
         type: 'bar' as const,
         name: s.name,
-        data: s.values,
-        barMaxWidth: 18,
+        data: s.rates,
+        barMaxWidth: 22,
         barGap: '15%',
-        itemStyle: { color: t.series[index], borderRadius: [RADIUS, RADIUS, 0, 0] },
-        // Only the target series is direct-labeled; the rest is in the legend, tooltip and table.
+        itemStyle: { color: s.color, borderRadius: [RADIUS, RADIUS, 0, 0] },
         label: {
-          show: index === series.length - 1,
+          show: true,
           position: 'top' as const,
           color: t.textPrimary,
           fontSize: 11,
           fontWeight: 600,
-          formatter: (p: { value: unknown }) => pct(p.value === null ? null : Number(p.value)),
+          formatter: (p: { dataIndex: number }) => formatInteger(s.contracts[p.dataIndex]),
         },
       })),
     },
     table: {
-      columns: ['Вид', ...series.map((s) => s.name)],
-      rows: r.rates.map((x, i) => [x.title, ...series.map((s) => pct(s.values[i]))]),
+      columns: ['Вид', ...series.flatMap((s) => [`${s.name}, % КВ`, `${s.name}, договоров`])],
+      rows: r.rates.map((x, i) => [
+        x.title,
+        ...series.flatMap((s) => [pct(s.rates[i]), formatInteger(s.contracts[i])]),
+      ]),
     },
   };
 }

@@ -269,6 +269,8 @@ export interface KvRecommendations {
     cappedWithPlan: boolean;
     addedWithPlan: number | null;
     collections: number;
+    /** Contracts behind each rate: quarter T's rate comes from the sales of T−1. */
+    contracts: { current: number; next: number; nextWithPlan: number };
   }[];
   portfolio: {
     lines: string[] | null;

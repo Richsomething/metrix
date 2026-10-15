@@ -38,6 +38,8 @@ def recommendations(service: "KvService", agent: str) -> dict:
     combined = service.effects(agent, nxt, both, before, after) if after else None
     income_now = service.income(agent, open_q, rate=rate_now)
     income_next = service.income(agent, nxt, rate=before)
+    rates = _line_rates(rate_now, before, after, income_now)
+    _add_contracts(service, agent, rates, sell)
     return {
         "agent": agent,
         "quarter": label(open_q),
@@ -49,7 +51,7 @@ def recommendations(service: "KvService", agent: str) -> dict:
             "currentBase": income_now["base"],
             "nextBase": income_next["base"],
         },
-        "rates": _line_rates(rate_now, before, after, income_now),
+        "rates": rates,
         "planComponents": {  # доплаты ставки следующего квартала без плана и с планом
             "before": planner.component_values(before),
             "after": planner.component_values(after) if after else None,
@@ -90,6 +92,29 @@ def _line_rates(rate_now: dict, before: dict, after: dict | None, income_now: di
         if r["total"] is not None and r["line"] not in HIDDEN_LINES and share.get(r["line"], 0.0) > 0
     ]
     return sorted(rows, key=lambda r: -r["collections"])
+
+
+def _add_contracts(service: "KvService", agent: str, rates: list[dict], sell: dict) -> None:
+    """Contracts behind each rate: quarter T's rate comes from the sales of T−1.
+
+    This quarter's rate — the previous quarter's fact; next quarter's — this quarter's contracts to date plus the rest
+    of the quarter at the agent's average check; with the plan — plus the planned contracts.
+    """
+    open_q = service.inputs.current
+    reporting = service.inputs.quarter(agent, open_q - 1)["lines"]
+    running = service.inputs.quarter(agent, open_q)["lines"]
+    checks = _avg_checks(service, agent)
+    planned = {row["line"]: row["planContracts"] or 0 for row in sell["rows"]}
+    for r in rates:
+        line, check = r["line"], checks.get(r["line"])
+        now = running.get(line, {})
+        rest = now.get("remainder", 0.0)
+        nxt = now.get("contracts", 0) + (round(rest / check) if check and rest > 0 else 0)
+        r["contracts"] = {
+            "current": reporting.get(line, {}).get("contracts", 0),
+            "next": nxt,
+            "nextWithPlan": nxt + planned.get(line, 0),
+        }
 
 
 def _portfolio(service: "KvService", agent: str, nxt, before: dict) -> dict:

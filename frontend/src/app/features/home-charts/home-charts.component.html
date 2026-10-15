@@ -22,7 +22,9 @@
       <app-chart-card
         class="wide"
         title="Ставки АВ по видам"
-        [subtitle]="'База, текущий квартал и ' + r.nextQuarter + ' — прогноз и если выполнить план'"
+        [subtitle]="
+          'Высота — % КВ, подпись — договоров за предыдущий квартал (для ' + r.nextQuarter + ' — прогноз)'
+        "
         [view]="c.rates"
         height="320px"
       />

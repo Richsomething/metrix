@@ -392,3 +392,19 @@ def test_recommendations_start_from_the_kasko_portfolio(tmp_path):
     assert s["rows"][-1]["line"] == "КАСКО" and s["rows"][0]["priority"]
     assert s["perRenewal"] == pytest.approx(s["total"] / 7)
     assert next(row for row in s["rows"] if row["line"] == IFL)["products"][0]["product"] == "Платинум"
+
+
+def test_recommendations_count_contracts_behind_each_rate(tmp_path):
+    from metrixs_ml.kv.recommend import recommendations
+
+    svc = _service(tmp_path, {"A": _agent()})
+    svc.inputs.data["prolongContracts"] = {"A": []}
+    svc.inputs.data["productMix"] = {"A": {}}
+
+    r = recommendations(svc, "A")
+    planned = {row["line"]: row["planContracts"] or 0 for row in r["sell"]["rows"]}
+
+    # 2026Q3's rate — 2026Q2 fact; 2026Q4's — 2026Q3 to date (10) + remainder ÷ average check (400 000 ÷ 40 000)
+    assert r["rates"]
+    for rate in r["rates"]:
+        assert rate["contracts"] == {"current": 10, "next": 20, "nextWithPlan": 20 + planned.get(rate["line"], 0)}
