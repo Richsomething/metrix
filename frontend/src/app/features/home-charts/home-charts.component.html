@@ -22,7 +22,13 @@
       <app-chart-card
         class="wide"
         title="Сколько можно добавить к ставке"
-        [subtitle]="'Ставка АВ ' + r.nextQuarter + ': прогноз и прирост в максимальном варианте'"
+        [subtitle]="
+          'Ставка АВ ' +
+          r.nextQuarter +
+          ': прогноз и прирост в максимальном варианте. Шкала — от ' +
+          c.ratesAxisFrom +
+          '%'
+        "
         [view]="c.rates"
         height="340px"
       />

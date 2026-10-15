@@ -3,7 +3,13 @@ import { dataOf, errorMessage } from '../../core/services/bonus-api.service';
 import { KvApiService } from '../../core/services/kv-api.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { ChartCardComponent } from '../../shared/components/chart-card/chart-card.component';
-import { incomeChart, portfolioChart, ratesChart, salesPlanChart } from './home.charts';
+import {
+  incomeChart,
+  portfolioChart,
+  ratesAxisMin,
+  ratesChart,
+  salesPlanChart,
+} from './home.charts';
 
 const ROW_HEIGHT_PX = 34;
 const MIN_BAR_CHART_PX = 220;
@@ -41,6 +47,7 @@ export class HomeChartsComponent {
     const portfolio = portfolioChart(r, t);
     return {
       rates: ratesChart(r, t),
+      ratesAxisFrom: Math.round(ratesAxisMin(r) * 100),
       income: incomeChart(r, t),
       sales,
       salesHeight: barsHeight(sales.table.rows.length),

@@ -25,6 +25,12 @@ function contractsWord(n: number): string {
   return 'договоров';
 }
 
+/** Where the rates axis starts: 5 п.п. below the lowest forecast, so the gain on top gets visible length. */
+export function ratesAxisMin(r: KvRecommendations): number {
+  const lowest = Math.min(...r.rates.map((x) => x.next ?? 0));
+  return Math.max(0, Math.floor((lowest - 0.05) * 20) / 20);
+}
+
 /**
  * Next quarter's АВ rate by line: the forecast as the column, the gain in the maximum option stacked on top.
  * Contract counts behind both live in the tooltip and the table, not on the chart.
@@ -63,7 +69,7 @@ export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
         ),
         axisLabel: { color: t.textPrimary, fontSize: 13, fontWeight: 600 },
       },
-      yAxis: valueAxis(t, (v) => pct(v)),
+      yAxis: { ...valueAxis(t, (v) => pct(v)), min: ratesAxisMin(r) },
       series: [
         {
           type: 'bar',
@@ -71,11 +77,11 @@ export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
           stack: 'rate',
           data: forecast,
           barMaxWidth: 48,
-          itemStyle: { color: t.sequential[1], borderColor: t.surface, borderWidth: 1 },
+          itemStyle: { color: t.series[0], borderColor: t.surface, borderWidth: 1 },
           label: {
             show: true,
             position: 'insideTop',
-            color: t.textPrimary,
+            color: '#ffffff',
             fontSize: 12,
             fontWeight: 600,
             formatter: (p) => pct(forecast[p.dataIndex]),
@@ -88,7 +94,7 @@ export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
           data: gain,
           barMaxWidth: 48,
           itemStyle: {
-            color: t.series[0],
+            color: t.sequential[1],
             borderColor: t.surface,
             borderWidth: 1,
             borderRadius: [RADIUS, RADIUS, 0, 0],
