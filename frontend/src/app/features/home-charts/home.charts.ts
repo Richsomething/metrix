@@ -87,10 +87,12 @@ export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
           stack: 'rate',
           data: gain,
           barMaxWidth: 48,
+          // dashed cap: the gain is possible, not earned yet
           itemStyle: {
-            color: t.series[0],
-            borderColor: t.surface,
-            borderWidth: 1,
+            color: t.sequential[0],
+            borderColor: t.series[0],
+            borderWidth: 2,
+            borderType: 'dashed',
             borderRadius: [RADIUS, RADIUS, 0, 0],
           },
           label: {
