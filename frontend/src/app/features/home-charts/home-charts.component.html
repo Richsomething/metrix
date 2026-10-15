@@ -22,13 +22,9 @@
       <app-chart-card
         class="wide"
         title="Ставки АВ по видам"
-        [subtitle]="
-          'Высота — % КВ, подпись — договоров за предыдущий квартал (для ' +
-          r.nextQuarter +
-          ' — прогноз)'
-        "
+        subtitle="Ставка КВ и число договоров, от которых она считается: ставку квартала дают продажи предыдущего"
         [view]="c.rates"
-        height="320px"
+        [height]="c.ratesHeight"
       />
       <app-chart-card
         title="Доход АВ"

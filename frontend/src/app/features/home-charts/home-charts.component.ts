@@ -41,6 +41,7 @@ export class HomeChartsComponent {
     const portfolio = portfolioChart(r, t);
     return {
       rates: ratesChart(r, t),
+      ratesHeight: `${r.rates.length * 96 + 90}px`,
       income: incomeChart(r, t),
       sales,
       salesHeight: barsHeight(sales.table.rows.length),
