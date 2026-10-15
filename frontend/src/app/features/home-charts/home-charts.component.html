@@ -103,13 +103,6 @@
           </div>
         </article>
       }
-      <app-chart-card
-        class="wide"
-        [title]="'Договоры к продлению в ' + r.quarter"
-        [subtitle]="'Нужно продлить ' + r.portfolio.needed + ' из ' + r.portfolio.due"
-        [view]="c.portfolio"
-        [height]="c.portfolioHeight"
-      />
     </section>
   }
 } @else if (!error()) {

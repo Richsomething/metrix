@@ -6,7 +6,6 @@ import {
   RADIUS,
   baseOption,
   categoryAxis,
-  horizontalBars,
   legend,
   valueAxis,
 } from '../dashboard/chart-options/base';
@@ -130,18 +129,3 @@ export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
     },
   };
 }
-
-/** Portfolio to prolong: contracts due by product. */
-export const portfolioChart = (r: KvRecommendations, t: ChartTokens): ChartView =>
-  horizontalBars(
-    [...r.portfolio.groups]
-      .sort((a, b) => b.count - a.count)
-      .map((g) => ({ name: `${g.title} · ${g.product}`, value: g.count })),
-    t,
-    {
-      format: formatInteger,
-      tableFormat: formatInteger,
-      valueLabel: 'Договоров',
-      nameLabel: 'Продукт',
-    },
-  );
