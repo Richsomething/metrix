@@ -32,12 +32,37 @@
         [view]="c.rates"
         height="340px"
       />
-      <app-chart-card
-        [title]="'Сборы ' + r.quarter"
-        [subtitle]="'Для максимальной ставки нужно ' + c.collectionsTotal + ' ₽'"
-        [view]="c.collections"
-        height="300px"
-      />
+      @if (collections(); as k) {
+        <article class="card collections" aria-label="Сборы квартала">
+          <h3>Сборы {{ r.quarter }}</h3>
+          <p class="headline">
+            Собрано <strong>{{ k.collected }}</strong> из <strong>{{ k.total }}</strong>
+          </p>
+          <div
+            class="progress"
+            role="img"
+            [attr.aria-label]="'Собрано ' + k.collected + ' из ' + k.total"
+          >
+            <span class="done" [style.width.%]="k.collectedPct"></span>
+            <span class="rest" [style.width.%]="k.restPct"></span>
+            <span class="extra" [style.width.%]="k.extraPct"></span>
+          </div>
+          <div class="tiles">
+            <div class="tile">
+              <div class="value done">{{ k.collected }}</div>
+              <div>✅ уже собрал</div>
+            </div>
+            <div class="tile">
+              <div class="value rest">+ {{ k.rest }}</div>
+              <div>⏳ соберёшь, если работать как сейчас</div>
+            </div>
+            <div class="tile">
+              <div class="value extra">+ {{ k.extra }}</div>
+              <div>🎯 надо продать ещё, чтобы получить максимум</div>
+            </div>
+          </div>
+        </article>
+      }
       <app-chart-card
         [title]="'Что продавать в ' + r.quarter"
         subtitle="План продаж приоритетных видов, ₽"

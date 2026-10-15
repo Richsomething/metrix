@@ -4,13 +4,7 @@ import { KvApiService } from '../../core/services/kv-api.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { ChartCardComponent } from '../../shared/components/chart-card/chart-card.component';
 import { formatCompact } from '../../shared/utils/format';
-import {
-  collectionsChart,
-  portfolioChart,
-  ratesAxisMin,
-  ratesChart,
-  salesPlanChart,
-} from './home.charts';
+import { portfolioChart, ratesAxisMin, ratesChart, salesPlanChart } from './home.charts';
 
 const ROW_HEIGHT_PX = 34;
 const MIN_BAR_CHART_PX = 220;
@@ -49,16 +43,36 @@ export class HomeChartsComponent {
     return {
       rates: ratesChart(r, t),
       ratesAxisFrom: Math.round(ratesAxisMin(r) * 100),
-      collections: collectionsChart(r, t),
-      collectionsTotal: formatCompact(
-        Math.max(r.income.currentBase, r.income.currentCollected) + r.sell.total,
-      ),
       sales,
       salesHeight: barsHeight(sales.table.rows.length),
       portfolio,
       portfolioHeight: barsHeight(portfolio.table.rows.length),
     };
   });
+
+  /** This quarter's collections: collected so far, the forecast for the rest, the extra for the maximum rate. */
+  protected readonly collections = computed(() => {
+    const r = this.rec();
+    if (!r) return null;
+    const collected = r.income.currentCollected;
+    const rest = Math.max(0, r.income.currentBase - collected);
+    const extra = r.sell.total;
+    const total = collected + rest + extra;
+    const share = (v: number): number => (total > 0 ? (v / total) * 100 : 0);
+    return {
+      collected: this.money(collected),
+      rest: this.money(rest),
+      extra: this.money(extra),
+      total: this.money(total),
+      collectedPct: share(collected),
+      restPct: share(rest),
+      extraPct: share(extra),
+    };
+  });
+
+  protected money(value: number): string {
+    return `${formatCompact(value)} ₽`;
+  }
 
   protected textValue(event: Event): string {
     return (event.target as HTMLSelectElement).value;

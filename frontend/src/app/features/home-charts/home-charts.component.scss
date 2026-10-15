@@ -63,3 +63,96 @@ select {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.card {
+  min-width: 0;
+  padding: 16px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+}
+
+// same hues as the rates chart: collected = solid blue, forecast = light blue, extra = orange
+.collections {
+  --done: #2a78d6;
+  --rest: #86b6ef;
+  --rest-text: #3c6fb0;
+  --extra: #eb6834;
+  --extra-text: #c4521f;
+
+  .headline {
+    margin: 12px 0 10px;
+    font-size: 17px;
+    color: var(--text-primary);
+  }
+
+  .progress {
+    display: flex;
+    gap: 2px;
+    height: 24px;
+    overflow: hidden;
+    border-radius: 8px;
+
+    span {
+      min-width: 4px;
+    }
+
+    .done {
+      background: var(--done);
+    }
+
+    .rest {
+      background: var(--rest);
+    }
+
+    .extra {
+      background: var(--extra);
+    }
+  }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 16px;
+
+    @media (max-width: 760px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .tile {
+    padding: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--text-secondary);
+    border: 1px solid var(--grid, #e1e0d9);
+    border-radius: 10px;
+  }
+
+  .value {
+    margin-bottom: 6px;
+    font-size: 20px;
+    font-weight: 700;
+    white-space: nowrap;
+
+    &.done {
+      color: var(--done);
+    }
+
+    &.rest {
+      color: var(--rest-text);
+    }
+
+    &.extra {
+      color: var(--extra-text);
+    }
+  }
+}

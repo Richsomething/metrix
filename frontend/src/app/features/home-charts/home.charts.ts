@@ -131,66 +131,6 @@ export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
   };
 }
 
-/** This quarter's collections: collected so far, forecast for the rest, and what to add for the maximum АВ rate. */
-export function collectionsChart(r: KvRecommendations, t: ChartTokens): ChartView {
-  const collected = r.income.currentCollected;
-  const rest = Math.max(0, r.income.currentBase - collected);
-  const extra = r.sell.total;
-  const parts = [
-    { name: 'Собрано', value: collected, color: t.series[0] },
-    { name: 'Прогноз до конца квартала', value: rest, color: t.sequential[1] },
-    { name: 'Добрать до максимума', value: extra, color: t.series[1] },
-  ];
-  const total = collected + rest + extra;
-  return {
-    option: {
-      ...baseOption(t),
-      // the column sits on the left, segment labels take the right side
-      grid: { left: 8, right: '62%', top: 12, bottom: 8 },
-      tooltip: {
-        ...baseOption(t).tooltip,
-        trigger: 'item',
-        formatter: (p: unknown) => {
-          const i = (p as { seriesIndex: number }).seriesIndex;
-          return `${parts[i].name}: <b>${money(parts[i].value)}</b>`;
-        },
-      },
-      xAxis: { ...categoryAxis(t, [r.quarter]), show: false },
-      yAxis: { ...valueAxis(t, formatCompact), show: false },
-      series: parts.map((part, i) => ({
-        type: 'bar' as const,
-        name: part.name,
-        stack: 'collections',
-        data: [part.value],
-        barWidth: 72,
-        itemStyle: {
-          color: part.color,
-          borderColor: t.surface,
-          borderWidth: 1,
-          borderRadius: i === parts.length - 1 ? [RADIUS, RADIUS, 0, 0] : 0,
-        },
-        label: {
-          show: part.value > 0,
-          position: 'right' as const,
-          distance: 12,
-          formatter: () => `{v|${formatCompact(part.value)} ₽}  {n|${part.name.toLowerCase()}}`,
-          rich: {
-            v: { color: t.textPrimary, fontSize: 13, fontWeight: 700 },
-            n: { color: t.textSecondary, fontSize: 12 },
-          },
-        },
-      })),
-    },
-    table: {
-      columns: ['Часть', 'Сумма'],
-      rows: [
-        ...parts.map((p) => [p.name, money(p.value)]),
-        ['Итого для максимальной ставки', money(total)],
-      ],
-    },
-  };
-}
-
 /** What to sell this quarter: plan amount per priority line. */
 export const salesPlanChart = (r: KvRecommendations, t: ChartTokens): ChartView =>
   horizontalBars(
