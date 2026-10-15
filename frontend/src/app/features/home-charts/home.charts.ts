@@ -44,7 +44,7 @@ export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
       contracts: r.rates.map((x) => x.contracts.next),
     },
     {
-      name: `${r.nextQuarter} с планом`,
+      name: `${r.nextQuarter} цель (максимальный вариант)`,
       color: t.series[3],
       rates: r.rates.map((x) => x.nextWithPlan),
       contracts: r.rates.map((x) => x.contracts.nextWithPlan),
@@ -135,7 +135,7 @@ export function incomeChart(r: KvRecommendations, t: ChartTokens): ChartView {
         },
         {
           type: 'bar',
-          name: 'Прирост с планом',
+          name: 'Прирост в максимальном варианте',
           stack: 'income',
           data: added,
           barMaxWidth: 72,
@@ -157,7 +157,12 @@ export function incomeChart(r: KvRecommendations, t: ChartTokens): ChartView {
       ],
     },
     table: {
-      columns: ['Квартал', 'Прогноз АВ', 'Прирост с планом', 'Итого с планом'],
+      columns: [
+        'Квартал',
+        'Прогноз АВ',
+        'Прирост в максимальном варианте',
+        'Итого в максимальном варианте',
+      ],
       rows: quarters.map((q, i) => [
         q,
         money(forecast[i]),

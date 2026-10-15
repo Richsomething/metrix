@@ -242,6 +242,7 @@ td {
 th {
   color: var(--text-secondary);
   font-weight: 600;
+  vertical-align: bottom;
 }
 
 td.products {
@@ -266,3 +267,9 @@ tr.muted td {
   text-decoration: underline;
 }
 
+th .sub {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+}

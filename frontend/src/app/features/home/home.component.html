@@ -22,11 +22,11 @@
     <p class="income">
       АВ {{ r.quarter }}: <strong>{{ money(r.income.current) }}</strong>
       @if (r.planEffect?.salesEffect) {
-        <span class="plus">+{{ money(r.planEffect?.salesEffect) }} с планом</span>
+        <span class="plus">+{{ money(r.planEffect?.salesEffect) }} в максимальном варианте</span>
       }
       · АВ {{ r.nextQuarter }}: <strong>{{ money(r.income.next) }}</strong>
       @if (r.planEffect?.rateEffect) {
-        <span class="plus">+{{ money(r.planEffect?.rateEffect) }} с планом</span>
+        <span class="plus">+{{ money(r.planEffect?.rateEffect) }} в максимальном варианте</span>
       }
     </p>
     <div class="table-wrap">
@@ -35,10 +35,10 @@
           <tr>
             <th scope="col">Вид</th>
             <th scope="col">База</th>
-            <th scope="col">{{ r.quarter }}</th>
-            <th scope="col">{{ r.nextQuarter }} прогноз</th>
-            <th scope="col">{{ r.nextQuarter }} если выполнить план</th>
-            <th scope="col">+ к базе</th>
+            <th scope="col">{{ r.quarter }}<span class="sub">действует сейчас</span></th>
+            <th scope="col">{{ r.nextQuarter }} прогноз<span class="sub">при текущих продажах</span></th>
+            <th scope="col">{{ r.nextQuarter }} цель<span class="sub">максимальный вариант</span></th>
+            <th scope="col">Цель − прогноз</th>
           </tr>
         </thead>
         <tbody>
@@ -49,16 +49,16 @@
               <td>{{ pct(row.current) }}</td>
               <td>{{ pct(row.next) }}</td>
               <td class="with-plan">{{ pct(row.nextWithPlan) }}{{ row.cappedWithPlan ? '*' : '' }}</td>
-              <td class="added">{{ points(row.addedWithPlan) }}</td>
+              <td class="added">{{ gap(row.next, row.nextWithPlan) }}</td>
             </tr>
           }
         </tbody>
       </table>
     </div>
     @if (planBonuses(); as b) {
-      <p class="plan-line">План добавляет: {{ b }}. У КАСКО и КИС — не больше +5 п.п.</p>
+      <p class="plan-line">Максимальный вариант добавляет: {{ b }}. У КАСКО и КИС — не больше +5 п.п.</p>
     }
-    <p class="hint">Ставка = база + доплаты: до +7 п.п., у КАСКО и КИС — до +5 п.п. * КАСКО не выше 30%. План — пункты 1 и 2 ниже.</p>
+    <p class="hint">Ставка = база + доплаты: до +7 п.п., у КАСКО и КИС — до +5 п.п. * КАСКО не выше 30%. Максимальный вариант — пункты 1 и 2 ниже.</p>
   </article>
 
   <div class="columns">

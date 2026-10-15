@@ -62,6 +62,11 @@ export class HomeComponent {
     return value === null ? '—' : `+${pctFormat.format(value * 100)} п.п.`;
   }
 
+  /** Target minus forecast in percentage points: 0.28 → 0.30 gives «+2 п.п.». */
+  protected gap(forecast: number | null, target: number | null): string {
+    return forecast === null || target === null ? '—' : this.points(Math.max(0, target - forecast));
+  }
+
   protected date(iso: string): string {
     return dateFormat.format(new Date(iso));
   }
