@@ -87,23 +87,19 @@ export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
           stack: 'rate',
           data: gain,
           barMaxWidth: 48,
-          // dashed cap: the gain is possible, not earned yet
           itemStyle: {
-            color: t.sequential[0],
-            borderColor: t.series[0],
+            color: t.series[0],
+            borderColor: t.surface,
             borderWidth: 1,
-            borderType: [4, 3],
             borderRadius: [RADIUS, RADIUS, 0, 0],
           },
           label: {
             show: true,
             position: 'top',
-            formatter: (p) =>
-              `{gain|${points(gain[p.dataIndex])}}  {total|${pct(target[p.dataIndex])}}`,
-            rich: {
-              gain: { color: t.series[0], fontSize: 13, fontWeight: 700 },
-              total: { color: t.textPrimary, fontSize: 13, fontWeight: 700 },
-            },
+            color: t.textPrimary,
+            fontSize: 13,
+            fontWeight: 700,
+            formatter: (p) => pct(target[p.dataIndex]),
           },
         },
       ],
