@@ -1,0 +1,52 @@
+@if (options(); as o) {
+  <div class="controls">
+    <label class="field">
+      <span>Агент</span>
+      <select [value]="agent()" (change)="agent.set(textValue($event))">
+        @for (name of o.agents; track name) {
+          <option [value]="name" [selected]="name === agent()">{{ name }}</option>
+        }
+      </select>
+    </label>
+    <span class="hint">Дата расчёта {{ o.asOf }} · синтетические данные</span>
+  </div>
+}
+
+@if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+}
+
+@if (rec(); as r) {
+  @if (charts(); as c) {
+    <section class="grid">
+      <app-chart-card
+        class="wide"
+        title="Ставки АВ по видам"
+        [subtitle]="'База, текущий квартал и ' + r.nextQuarter + ' — прогноз и если выполнить план'"
+        [view]="c.rates"
+        height="320px"
+      />
+      <app-chart-card
+        title="Доход АВ"
+        subtitle="Прогноз и прирост, если выполнить план"
+        [view]="c.income"
+        height="300px"
+      />
+      <app-chart-card
+        [title]="'Что продавать в ' + r.quarter"
+        subtitle="План продаж приоритетных видов, ₽"
+        [view]="c.sales"
+        [height]="c.salesHeight"
+      />
+      <app-chart-card
+        class="wide"
+        [title]="'Договоры к продлению в ' + r.quarter"
+        [subtitle]="'Нужно продлить ' + r.portfolio.needed + ' из ' + r.portfolio.due"
+        [view]="c.portfolio"
+        [height]="c.portfolioHeight"
+      />
+    </section>
+  }
+} @else if (!error()) {
+  <p class="status" role="status">Загружаю данные…</p>
+}

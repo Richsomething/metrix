@@ -16,6 +16,7 @@ import { FilterBarComponent, FilterChange } from './filter-bar/filter-bar.compon
 import { BonusSectionComponent } from '../bonuses/bonus-section.component';
 import { MotivationComponent } from '../motivation/motivation.component';
 import { HomeComponent } from '../home/home.component';
+import { HomeChartsComponent } from '../home-charts/home-charts.component';
 import {
   agentHeatmapChart,
   agentsChart,
@@ -32,14 +33,15 @@ import {
   prolongByProductChart,
 } from './chart-options/prolongation.charts';
 
-type Tab = 'home' | 'av' | 'analytics';
+type Tab = 'home' | 'charts' | 'av' | 'analytics';
 const TABS: { id: Tab; title: string }[] = [
   { id: 'home', title: 'Главная' },
+  { id: 'charts', title: 'Графики' },
   { id: 'av', title: 'Расчёт АВ' },
   { id: 'analytics', title: 'Аналитика' },
 ];
 
-/** The open tab survives a reload through the URL hash (#av, #analytics). */
+/** The open tab survives a reload through the URL hash (#charts, #av, #analytics). */
 function tabFromHash(): Tab {
   const hash = typeof location === 'undefined' ? '' : location.hash.slice(1);
   return TABS.some((t) => t.id === hash) ? (hash as Tab) : 'home';
@@ -61,6 +63,7 @@ const barsHeight = (rows: number): string =>
     BonusSectionComponent,
     MotivationComponent,
     HomeComponent,
+    HomeChartsComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
