@@ -3,8 +3,9 @@ import { dataOf, errorMessage } from '../../core/services/bonus-api.service';
 import { KvApiService } from '../../core/services/kv-api.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { ChartCardComponent } from '../../shared/components/chart-card/chart-card.component';
+import { formatCompact } from '../../shared/utils/format';
 import {
-  incomeChart,
+  collectionsChart,
   portfolioChart,
   ratesAxisMin,
   ratesChart,
@@ -48,7 +49,10 @@ export class HomeChartsComponent {
     return {
       rates: ratesChart(r, t),
       ratesAxisFrom: Math.round(ratesAxisMin(r) * 100),
-      income: incomeChart(r, t),
+      collections: collectionsChart(r, t),
+      collectionsTotal: formatCompact(
+        Math.max(r.income.currentBase, r.income.currentCollected) + r.sell.total,
+      ),
       sales,
       salesHeight: barsHeight(sales.table.rows.length),
       portfolio,

@@ -33,9 +33,9 @@
         height="340px"
       />
       <app-chart-card
-        title="Вознаграждение агента, ₽"
-        subtitle="Сборы × ставка АВ: прогноз и прирост в максимальном варианте"
-        [view]="c.income"
+        [title]="'Сборы ' + r.quarter"
+        [subtitle]="'Для максимальной ставки нужно ' + c.collectionsTotal + ' ₽'"
+        [view]="c.collections"
         height="300px"
       />
       <app-chart-card

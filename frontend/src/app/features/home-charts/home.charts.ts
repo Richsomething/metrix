@@ -131,84 +131,62 @@ export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
   };
 }
 
-/** Agent's remuneration in ₽ per quarter (collections × АВ rate): the forecast plus the gain in the maximum option. */
-export function incomeChart(r: KvRecommendations, t: ChartTokens): ChartView {
-  const quarters = [r.quarter, r.nextQuarter];
-  const collections = [r.income.currentBase, r.income.nextBase];
-  const forecast = [r.income.current, r.income.next];
-  const added = [r.planEffect?.salesEffect ?? 0, r.planEffect?.rateEffect ?? 0];
-  const why = [`за доп. продажи на ${money(r.sell.total)}`, 'за рост ставок АВ'];
+/** This quarter's collections: collected so far, forecast for the rest, and what to add for the maximum АВ rate. */
+export function collectionsChart(r: KvRecommendations, t: ChartTokens): ChartView {
+  const collected = r.income.currentCollected;
+  const rest = Math.max(0, r.income.currentBase - collected);
+  const extra = r.sell.total;
+  const parts = [
+    { name: 'Собрано', value: collected, color: t.series[0] },
+    { name: 'Прогноз до конца квартала', value: rest, color: t.sequential[1] },
+    { name: 'Добрать до максимума', value: extra, color: t.series[1] },
+  ];
+  const total = collected + rest + extra;
   return {
     option: {
       ...baseOption(t),
-      grid: { left: 8, right: 16, top: 52, bottom: 8, containLabel: true },
-      legend: legend(t),
+      // the column sits on the left, segment labels take the right side
+      grid: { left: 8, right: '62%', top: 12, bottom: 8 },
       tooltip: {
         ...baseOption(t).tooltip,
-        trigger: 'axis',
-        axisPointer: { type: 'shadow' },
-        formatter: (params: unknown) => {
-          const i = (params as { dataIndex: number }[])[0].dataIndex;
-          return [
-            `<b>${quarters[i]}</b>`,
-            `Сборы (прогноз): ${money(collections[i])}`,
-            `Вознаграждение (прогноз): <b>${money(forecast[i])}</b>`,
-            `Прирост: <b>+${money(added[i])}</b> ${why[i]}`,
-            `Итого в максимальном варианте: <b>${money(forecast[i] + added[i])}</b>`,
-          ].join('<br>');
+        trigger: 'item',
+        formatter: (p: unknown) => {
+          const i = (p as { seriesIndex: number }).seriesIndex;
+          return `${parts[i].name}: <b>${money(parts[i].value)}</b>`;
         },
       },
-      xAxis: categoryAxis(t, quarters),
-      yAxis: valueAxis(t, formatCompact),
-      series: [
-        {
-          type: 'bar',
-          name: 'Вознаграждение (прогноз)',
-          stack: 'income',
-          data: forecast,
-          barMaxWidth: 72,
-          itemStyle: { color: t.series[0], borderColor: t.surface, borderWidth: 1 },
+      xAxis: { ...categoryAxis(t, [r.quarter]), show: false },
+      yAxis: { ...valueAxis(t, formatCompact), show: false },
+      series: parts.map((part, i) => ({
+        type: 'bar' as const,
+        name: part.name,
+        stack: 'collections',
+        data: [part.value],
+        barWidth: 72,
+        itemStyle: {
+          color: part.color,
+          borderColor: t.surface,
+          borderWidth: 1,
+          borderRadius: i === parts.length - 1 ? [RADIUS, RADIUS, 0, 0] : 0,
         },
-        {
-          type: 'bar',
-          name: 'Прирост в максимальном варианте',
-          stack: 'income',
-          data: added,
-          barMaxWidth: 72,
-          itemStyle: {
-            color: t.sequential[1],
-            borderColor: t.surface,
-            borderWidth: 1,
-            borderRadius: [RADIUS, RADIUS, 0, 0],
-          },
-          label: {
-            show: true,
-            position: 'top',
-            color: t.textPrimary,
-            fontSize: 12,
-            fontWeight: 600,
-            formatter: (p) => `${formatCompact(forecast[p.dataIndex] + added[p.dataIndex])} ₽`,
+        label: {
+          show: part.value > 0,
+          position: 'right' as const,
+          distance: 12,
+          formatter: () => `{v|${formatCompact(part.value)} ₽}  {n|${part.name.toLowerCase()}}`,
+          rich: {
+            v: { color: t.textPrimary, fontSize: 13, fontWeight: 700 },
+            n: { color: t.textSecondary, fontSize: 12 },
           },
         },
-      ],
+      })),
     },
     table: {
-      columns: [
-        'Квартал',
-        'Сборы (прогноз)',
-        'Вознаграждение (прогноз)',
-        'Прирост',
-        'Откуда прирост',
-        'Итого в максимальном варианте',
+      columns: ['Часть', 'Сумма'],
+      rows: [
+        ...parts.map((p) => [p.name, money(p.value)]),
+        ['Итого для максимальной ставки', money(total)],
       ],
-      rows: quarters.map((q, i) => [
-        q,
-        money(collections[i]),
-        money(forecast[i]),
-        money(added[i]),
-        why[i],
-        money(forecast[i] + added[i]),
-      ]),
     },
   };
 }

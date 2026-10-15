@@ -258,7 +258,14 @@ export interface KvRecommendations {
   quarter: string;
   nextQuarter: string;
   asOf: string;
-  income: { current: number; next: number; currentBase: number; nextBase: number };
+  income: {
+    current: number;
+    next: number;
+    currentBase: number;
+    nextBase: number;
+    /** Collections of the rated lines signed up to the report date; the rest of currentBase is forecast. */
+    currentCollected: number;
+  };
   rates: {
     line: string;
     title: string;

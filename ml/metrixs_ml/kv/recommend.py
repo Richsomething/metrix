@@ -50,6 +50,8 @@ def recommendations(service: "KvService", agent: str) -> dict:
             "next": income_next["kv"],
             "currentBase": income_now["base"],
             "nextBase": income_next["base"],
+            # collections of the rated lines signed up to the report date; the rest of currentBase is forecast
+            "currentCollected": _collected(service, agent, income_now),
         },
         "rates": rates,
         "planComponents": {  # доплаты ставки следующего квартала без плана и с планом
@@ -92,6 +94,13 @@ def _line_rates(rate_now: dict, before: dict, after: dict | None, income_now: di
         if r["total"] is not None and r["line"] not in HIDDEN_LINES and share.get(r["line"], 0.0) > 0
     ]
     return sorted(rows, key=lambda r: -r["collections"])
+
+
+def _collected(service: "KvService", agent: str, income_now: dict) -> float:
+    running = service.inputs.quarter(agent, service.inputs.current)["lines"]
+    rated = {row["line"] for row in income_now["lines"]}
+    total = sum(max(0.0, running.get(line, {}).get("toDate", 0.0)) for line in rated)
+    return round(min(total, income_now["base"]), 2)
 
 
 def _add_contracts(service: "KvService", agent: str, rates: list[dict], sell: dict) -> None:
