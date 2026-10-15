@@ -131,11 +131,13 @@ export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
   };
 }
 
-/** АВ income per quarter: the forecast plus what the plan adds on top. */
+/** Agent's remuneration in ₽ per quarter (collections × АВ rate): the forecast plus the gain in the maximum option. */
 export function incomeChart(r: KvRecommendations, t: ChartTokens): ChartView {
   const quarters = [r.quarter, r.nextQuarter];
+  const collections = [r.income.currentBase, r.income.nextBase];
   const forecast = [r.income.current, r.income.next];
   const added = [r.planEffect?.salesEffect ?? 0, r.planEffect?.rateEffect ?? 0];
+  const why = [`за доп. продажи на ${money(r.sell.total)}`, 'за рост ставок АВ'];
   return {
     option: {
       ...baseOption(t),
@@ -145,14 +147,23 @@ export function incomeChart(r: KvRecommendations, t: ChartTokens): ChartView {
         ...baseOption(t).tooltip,
         trigger: 'axis',
         axisPointer: { type: 'shadow' },
-        valueFormatter: (v) => money(Number(v)),
+        formatter: (params: unknown) => {
+          const i = (params as { dataIndex: number }[])[0].dataIndex;
+          return [
+            `<b>${quarters[i]}</b>`,
+            `Сборы (прогноз): ${money(collections[i])}`,
+            `Вознаграждение (прогноз): <b>${money(forecast[i])}</b>`,
+            `Прирост: <b>+${money(added[i])}</b> ${why[i]}`,
+            `Итого в максимальном варианте: <b>${money(forecast[i] + added[i])}</b>`,
+          ].join('<br>');
+        },
       },
       xAxis: categoryAxis(t, quarters),
       yAxis: valueAxis(t, formatCompact),
       series: [
         {
           type: 'bar',
-          name: 'Прогноз АВ',
+          name: 'Вознаграждение (прогноз)',
           stack: 'income',
           data: forecast,
           barMaxWidth: 72,
@@ -165,7 +176,7 @@ export function incomeChart(r: KvRecommendations, t: ChartTokens): ChartView {
           data: added,
           barMaxWidth: 72,
           itemStyle: {
-            color: t.series[2],
+            color: t.sequential[1],
             borderColor: t.surface,
             borderWidth: 1,
             borderRadius: [RADIUS, RADIUS, 0, 0],
@@ -176,7 +187,7 @@ export function incomeChart(r: KvRecommendations, t: ChartTokens): ChartView {
             color: t.textPrimary,
             fontSize: 12,
             fontWeight: 600,
-            formatter: (p) => formatCompact(forecast[p.dataIndex] + added[p.dataIndex]),
+            formatter: (p) => `${formatCompact(forecast[p.dataIndex] + added[p.dataIndex])} ₽`,
           },
         },
       ],
@@ -184,14 +195,18 @@ export function incomeChart(r: KvRecommendations, t: ChartTokens): ChartView {
     table: {
       columns: [
         'Квартал',
-        'Прогноз АВ',
-        'Прирост в максимальном варианте',
+        'Сборы (прогноз)',
+        'Вознаграждение (прогноз)',
+        'Прирост',
+        'Откуда прирост',
         'Итого в максимальном варианте',
       ],
       rows: quarters.map((q, i) => [
         q,
+        money(collections[i]),
         money(forecast[i]),
         money(added[i]),
+        why[i],
         money(forecast[i] + added[i]),
       ]),
     },
