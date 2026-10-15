@@ -113,7 +113,53 @@ select {
     }
 
     .extra {
+      display: flex;
+      gap: 2px;
+      cursor: pointer;
       background: var(--extra);
+
+      &.open {
+        background: transparent;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 2px;
+      }
+
+      i {
+        flex-basis: 0;
+        min-width: 3px;
+      }
+    }
+  }
+
+  .extra-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 6px 0 0;
+    padding: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+    list-style: none;
+    white-space: nowrap;
+
+    i {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 5px;
+      border-radius: 2px;
+    }
+
+    b {
+      color: var(--text-primary);
+    }
+
+    .muted {
+      margin-left: 4px;
+      color: var(--text-muted);
     }
   }
 

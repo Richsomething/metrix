@@ -131,22 +131,6 @@ export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
   };
 }
 
-/** What to sell this quarter: plan amount per priority line. */
-export const salesPlanChart = (r: KvRecommendations, t: ChartTokens): ChartView =>
-  horizontalBars(
-    r.sell.rows
-      .filter((row) => row.priority && row.planAmount > 0)
-      .map((row) => ({ name: row.title, value: row.planAmount })),
-    t,
-    {
-      format: formatCompact,
-      tableFormat: money,
-      valueLabel: 'План продаж',
-      nameLabel: 'Вид',
-      color: t.series[2],
-    },
-  );
-
 /** Portfolio to prolong: contracts due by product. */
 export const portfolioChart = (r: KvRecommendations, t: ChartTokens): ChartView =>
   horizontalBars(

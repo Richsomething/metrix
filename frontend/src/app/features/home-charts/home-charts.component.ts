@@ -1,17 +1,27 @@
-import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  linkedSignal,
+  signal,
+} from '@angular/core';
 import { dataOf, errorMessage } from '../../core/services/bonus-api.service';
 import { KvApiService } from '../../core/services/kv-api.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { ChartCardComponent } from '../../shared/components/chart-card/chart-card.component';
 import { formatCompact } from '../../shared/utils/format';
-import { portfolioChart, ratesAxisMin, ratesChart, salesPlanChart } from './home.charts';
+import { portfolioChart, ratesAxisMin, ratesChart } from './home.charts';
+
+/** Orange ramp for the lines inside «надо продать ещё», biggest first. */
+const EXTRA_SHADES = ['#eb6834', '#f08a5d', '#f4ab87', '#f8ccb4', '#fbe0d1'];
 
 const ROW_HEIGHT_PX = 34;
 const MIN_BAR_CHART_PX = 220;
 const barsHeight = (rows: number): string =>
   `${Math.max(MIN_BAR_CHART_PX, rows * ROW_HEIGHT_PX + 40)}px`;
 
-/** The main page's numbers as charts: rates, income, sales plan and portfolio to prolong. */
+/** The main page's numbers as charts: rates, collections with the sales plan, portfolio to prolong. */
 @Component({
   selector: 'app-home-charts',
   imports: [ChartCardComponent],
@@ -38,13 +48,10 @@ export class HomeChartsComponent {
     const r = this.rec();
     const t = this.tokens();
     if (!r) return null;
-    const sales = salesPlanChart(r, t);
     const portfolio = portfolioChart(r, t);
     return {
       rates: ratesChart(r, t),
       ratesAxisFrom: Math.round(ratesAxisMin(r) * 100),
-      sales,
-      salesHeight: barsHeight(sales.table.rows.length),
       portfolio,
       portfolioHeight: barsHeight(portfolio.table.rows.length),
     };
@@ -67,8 +74,21 @@ export class HomeChartsComponent {
       collectedPct: share(collected),
       restPct: share(rest),
       extraPct: share(extra),
+      // the extra split by priority line, shown when the orange part is hovered or tapped
+      lines: r.sell.rows
+        .filter((row) => row.priority && row.planAmount > 0)
+        .map((row, i) => ({
+          title: row.title,
+          amount: this.money(row.planAmount),
+          contracts: row.planContracts,
+          share: row.planAmount,
+          shade: EXTRA_SHADES[Math.min(i, EXTRA_SHADES.length - 1)],
+        })),
     };
   });
+
+  /** The orange part is split by line while hovered, focused or tapped. */
+  protected readonly extraOpen = signal(false);
 
   protected money(value: number): string {
     return `${formatCompact(value)} ₽`;

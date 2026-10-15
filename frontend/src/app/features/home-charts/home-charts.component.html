@@ -33,7 +33,7 @@
         height="340px"
       />
       @if (collections(); as k) {
-        <article class="card collections" aria-label="Сборы квартала">
+        <article class="card collections wide" aria-label="Сборы квартала">
           <h3>Сборы {{ r.quarter }}</h3>
           <p class="headline">
             Собрано <strong>{{ k.collected }}</strong> из <strong>{{ k.total }}</strong>
@@ -45,8 +45,37 @@
           >
             <span class="done" [style.width.%]="k.collectedPct"></span>
             <span class="rest" [style.width.%]="k.restPct"></span>
-            <span class="extra" [style.width.%]="k.extraPct"></span>
+            <span
+              class="extra"
+              tabindex="0"
+              [class.open]="extraOpen()"
+              [style.width.%]="k.extraPct"
+              [attr.aria-label]="'Надо продать ещё ' + k.extra + ', по видам'"
+              (mouseenter)="extraOpen.set(true)"
+              (mouseleave)="extraOpen.set(false)"
+              (focus)="extraOpen.set(true)"
+              (blur)="extraOpen.set(false)"
+              (click)="extraOpen.set(!extraOpen())"
+            >
+              @if (extraOpen()) {
+                @for (line of k.lines; track line.title) {
+                  <i [style.flex-grow]="line.share" [style.background]="line.shade"></i>
+                }
+              }
+            </span>
           </div>
+          @if (extraOpen()) {
+            <ul class="extra-lines" [style.margin-left.%]="k.collectedPct + k.restPct">
+              @for (line of k.lines; track line.title) {
+                <li>
+                  <i [style.background]="line.shade"></i><b>{{ line.title }}</b> {{ line.amount }}
+                  @if (line.contracts) {
+                    <span class="muted">≈ {{ line.contracts }} дог.</span>
+                  }
+                </li>
+              }
+            </ul>
+          }
           <div class="tiles">
             <div class="tile">
               <div class="value done">{{ k.collected }}</div>
@@ -63,12 +92,6 @@
           </div>
         </article>
       }
-      <app-chart-card
-        [title]="'Что продавать в ' + r.quarter"
-        subtitle="План продаж приоритетных видов, ₽"
-        [view]="c.sales"
-        [height]="c.salesHeight"
-      />
       <app-chart-card
         class="wide"
         [title]="'Договоры к продлению в ' + r.quarter"
