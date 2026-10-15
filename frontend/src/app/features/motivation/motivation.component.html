@@ -1,0 +1,404 @@
+<header class="head">
+  <h2>Моя мотивация — агентское вознаграждение (АВ)</h2>
+  @if (cabinet(); as c) {
+    <span class="badge" [title]="c.currentRate.rule.source"
+      >Правила: Решение ДРБ-УРСП-125/2019 + калькулятор АВ</span
+    >
+  }
+</header>
+
+@if (options(); as o) {
+  <div class="controls">
+    <label class="field">
+      <span>Агент</span>
+      <select [value]="agent()" (change)="agent.set(textValue($event))">
+        @for (name of o.agents; track name) {
+          <option [value]="name" [selected]="name === agent()">{{ name }}</option>
+        }
+      </select>
+    </label>
+    <label class="field">
+      <span>Квартал</span>
+      <select [value]="quarter()" (change)="quarter.set(textValue($event))">
+        @for (q of o.quarters; track q) {
+          <option [value]="q" [selected]="q === quarter()">
+            {{ q }}{{ q === o.currentQuarter ? ' (открытый)' : '' }}
+          </option>
+        }
+      </select>
+    </label>
+    <a class="button" [href]="exportHref()" download>Выгрузить в Excel</a>
+    <span class="hint">Данные: {{ o.source }}, факт по {{ o.asOf }}</span>
+  </div>
+}
+
+@if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+} @else if (loading()) {
+  <p class="hint" role="status">Считаю АВ…</p>
+}
+
+@if (cabinet(); as c) {
+  <section class="tiles">
+    <article class="tile">
+      <p class="label">Ставка КАСКО {{ c.quarter }}</p>
+      <p class="value">{{ pct(kasko()?.current?.total) }}</p>
+      <p class="note">{{ c.currentRate.statusTitle }} {{ c.currentRate.reporting }}</p>
+    </article>
+    <article class="tile">
+      <p class="label">Ставка КАСКО {{ c.nextQuarter }}</p>
+      <p class="value">{{ pct(kasko()?.next?.total) }}</p>
+      <p class="note">{{ c.nextRate.statusTitle }}</p>
+    </article>
+    <article class="tile">
+      <p class="label">АВ за {{ c.quarter }}</p>
+      <p class="value">{{ money(c.income.current.base.kv) }}</p>
+      <p class="note">ставки — факт, сборы — {{ c.income.current.base.kindTitle }}</p>
+    </article>
+    <article class="tile">
+      <p class="label">Прогноз АВ {{ c.nextQuarter }}</p>
+      <p class="value">{{ money(c.income.next.base.kv) }}</p>
+      <p class="note">
+        {{ money(c.income.next.cautious.kv) }} … {{ money(c.income.next.optimistic.kv) }}
+      </p>
+    </article>
+  </section>
+
+  <article class="card">
+    <h3>Ставки по видам</h3>
+    <p class="hint">Ставка = база + Доп.АВ1 + Доп.АВ2 + Доп.АВ3; КАСКО — не выше 30%.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Вид</th>
+            <th scope="col">База</th>
+            <th scope="col">Доп.АВ1</th>
+            <th scope="col">Доп.АВ2</th>
+            <th scope="col">Доп.АВ3</th>
+            <th scope="col">{{ c.quarter }}</th>
+            <th scope="col">{{ c.nextQuarter }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of rateRows(); track r.line) {
+            <tr [class.muted]="r.total === null">
+              <td [title]="r.note ?? ''">{{ r.title }}{{ r.note ? '*' : '' }}</td>
+              @if (r.total === null) {
+                <td colspan="6">нет ставки в правилах</td>
+              } @else {
+                <td>{{ pct(r.base) }}</td>
+                <td>{{ pp(r.d1) }}</td>
+                <td>{{ pp(r.d2) }}</td>
+                <td>{{ pp(r.d3) }}</td>
+                <td>
+                  <strong>{{ pct(r.total) }}</strong
+                  >{{ r.capped ? ' (лимит)' : '' }}
+                </td>
+                <td>{{ pct(r.nextTotal) }}{{ r.nextCapped ? ' (лимит)' : '' }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">* Наведите на вид — примечание к ставке.</p>
+  </article>
+
+  <article class="card">
+    <h3>Почему такие ставки</h3>
+    <p class="hint">
+      {{ c.quarter }} — по {{ c.currentRate.reporting }} и {{ c.currentRate.previous }};
+      {{ c.nextQuarter }} — по {{ c.nextRate.reporting }} и {{ c.nextRate.previous }}.
+      {{ c.agentInfo.branch }}{{ c.agentInfo.newcomer ? ', новичок — КАСКО 25%' : '' }}.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Показатель</th>
+            <th scope="col">Условие</th>
+            <th scope="col">{{ c.currentRate.reporting }}</th>
+            <th scope="col">→ {{ c.quarter }}</th>
+            <th scope="col">{{ c.nextRate.reporting }} (прогноз)</th>
+            <th scope="col">→ {{ c.nextQuarter }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of indicatorRows(); track row.title) {
+            <tr>
+              <td>{{ row.title }}</td>
+              <td>{{ row.rule }}</td>
+              <td>{{ row.current }}</td>
+              <td>{{ row.currentBonus }}</td>
+              <td>{{ row.next }}</td>
+              <td>{{ row.nextBonus }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (c.currentRate.components.kaskoBase.scaleGroup !== c.currentRate.components.kaskoBase.group) {
+      <p class="hint">* Демо-сопоставление групп филиалов со шкалой Решения — см. допущения.</p>
+    }
+  </article>
+
+  @if (!c.plan.available) {
+    <p class="notice">{{ c.plan.reason }}</p>
+  } @else {
+    <article class="card">
+      <h3>Как поднять ставки {{ c.plan.quarter }}: что сделать в {{ c.plan.salesQuarter }}</h3>
+      @if ((c.plan.steps ?? []).length === 0) {
+        <p class="hint">Все доплаты по прогнозу уже набраны.</p>
+      } @else {
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Шаг</th>
+                <th scope="col">Условие</th>
+                <th scope="col">Нужно</th>
+                <th scope="col">Ставка</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (s of c.plan.steps; track s.component) {
+                <tr>
+                  <td>{{ s.title }}</td>
+                  <td>{{ s.target }}</td>
+                  <td [title]="s.salesNote ?? ''">{{ stepNeed(s) }}</td>
+                  <td>{{ stepChange(s) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if ((c.plan.options ?? []).length) {
+        <h4>Все шаги сразу</h4>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Вариант</th>
+                <th scope="col">КАСКО</th>
+                <th scope="col">Приоритетные</th>
+                <th scope="col">Пролонгаций</th>
+                <th scope="col">Договоров*</th>
+                <th scope="col">АВ от продаж</th>
+                <th scope="col">АВ от ставки</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (o of c.plan.options; track o.key) {
+                <tr>
+                  <td>{{ o.title }}</td>
+                  <td>{{ money(o.kasko) }}</td>
+                  <td>{{ money(o.priority) }}</td>
+                  <td>{{ o.prolonged ?? '—' }}</td>
+                  <td>{{ contractsText(o) }}</td>
+                  <td>{{ money(o.effects.salesEffect) }}</td>
+                  <td>{{ money(o.effects.rateEffect) }}</td>
+                  <td>
+                    <button type="button" (click)="applyOption(o)" [disabled]="!isCurrent()">
+                      В калькулятор
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="hint">* КАСКО + приоритетные, оценка по среднему чеку. {{ c.plan.note }}</p>
+      }
+    </article>
+  }
+
+  <article class="card">
+    <h3>Что изменится, если…</h3>
+    @if (!isCurrent()) {
+      <p class="hint">Калькулятор — для открытого квартала {{ options()?.currentQuarter }}.</p>
+    } @else {
+      <div class="calc">
+        <label class="field">
+          <span>Доп. КАСКО, ₽</span>
+          <input
+            type="number"
+            min="0"
+            step="10000"
+            [value]="extraKasko()"
+            (input)="extraKasko.set(numberValue($event))"
+          />
+        </label>
+        <label class="field">
+          <span>Доп. приоритетные, ₽</span>
+          <input
+            type="number"
+            min="0"
+            step="10000"
+            [value]="extraPriority()"
+            (input)="extraPriority.set(numberValue($event))"
+          />
+        </label>
+        <label class="field">
+          <span>Пролонгирую договоров, шт</span>
+          <input
+            type="number"
+            min="0"
+            step="1"
+            placeholder="не задано"
+            [value]="prolonged()"
+            (input)="prolonged.set(textValue($event))"
+          />
+        </label>
+        <label class="field">
+          <span>К пролонгации, шт</span>
+          <input
+            type="number"
+            min="0"
+            step="1"
+            [placeholder]="'≈ ' + c.nextRate.metrics.prolongation.due"
+            [value]="due()"
+            (input)="due.set(textValue($event))"
+          />
+        </label>
+        <button
+          type="button"
+          class="primary"
+          (click)="runSimulation()"
+          [disabled]="simulation().status === 'loading'"
+        >
+          Пересчитать
+        </button>
+      </div>
+
+      @if (simulation(); as s) {
+        @if (s.status === 'loading') {
+          <p class="hint" role="status">Пересчитываю…</p>
+        } @else if (s.status === 'error') {
+          <p class="error" role="alert">{{ s.message }}</p>
+        } @else if (s.status === 'done') {
+          <table class="compare">
+            <thead>
+              <tr>
+                <th scope="col">{{ s.result.nextQuarter }}</th>
+                <th scope="col">Сейчас (прогноз)</th>
+                <th scope="col">Сценарий</th>
+                <th scope="col">Эффект</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>База КАСКО / Доп.АВ1 / 2 / 3</td>
+                <td>
+                  {{ pct(s.result.baseline.nextRate.components.kaskoBase) }} /
+                  {{ pp(s.result.baseline.nextRate.components.d1) }} /
+                  {{ pp(s.result.baseline.nextRate.components.d2) }} /
+                  {{ pp(s.result.baseline.nextRate.components.d3) }}
+                </td>
+                <td>
+                  {{ pct(s.result.scenario.nextRate.components.kaskoBase) }} /
+                  {{ pp(s.result.scenario.nextRate.components.d1) }} /
+                  {{ pp(s.result.scenario.nextRate.components.d2) }} /
+                  {{ pp(s.result.scenario.nextRate.components.d3) }}
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>АВ {{ s.result.quarter }}</td>
+                <td>{{ money(s.result.baseline.incomeCurrent.kv) }}</td>
+                <td>{{ money(s.result.scenario.incomeCurrent.kv) }}</td>
+                <td>{{ money(s.result.effects.salesEffect) }} — от продаж</td>
+              </tr>
+              <tr>
+                <td>АВ {{ s.result.nextQuarter }}</td>
+                <td>{{ money(s.result.baseline.incomeNext.kv) }}</td>
+                <td>{{ money(s.result.scenario.incomeNext.kv) }}</td>
+                <td>{{ money(s.result.effects.rateEffect) }} — от ставки</td>
+              </tr>
+              <tr class="total">
+                <td>Итого прирост АВ</td>
+                <td></td>
+                <td></td>
+                <td>{{ money(s.result.effects.total) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        }
+      }
+    }
+  </article>
+
+  <article class="card">
+    <h3>Сценарии дохода</h3>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Сценарий</th>
+          <th scope="col">КАСКО {{ c.nextQuarter }}</th>
+          <th scope="col">АВ {{ c.quarter }}</th>
+          <th scope="col">АВ {{ c.nextQuarter }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of scenarioRows(); track row.title) {
+          <tr>
+            <td>{{ row.title }}</td>
+            <td>{{ pct(row.kasko) }}</td>
+            <td>{{ money(row.current) }}</td>
+            <td>{{ money(row.next) }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <p class="hint">{{ c.scenarioNote }}</p>
+  </article>
+
+  <article class="card">
+    <h3>Объяснение ИИ-агентов</h3>
+    <p class="hint">Все цифры — из расчёта выше; ИИ только объясняет.</p>
+    <button
+      type="button"
+      class="primary"
+      (click)="runReview()"
+      [disabled]="review().status === 'loading'"
+    >
+      {{ review().status === 'loading' ? 'Агенты работают…' : 'Объяснить мой расчёт' }}
+    </button>
+    @if (review(); as r) {
+      @if (r.status === 'error') {
+        <p class="error" role="alert">{{ r.message }}</p>
+      } @else if (r.status === 'done') {
+        <div class="ai">
+          <p>{{ r.result.analysis.summary }}</p>
+          <h4>{{ r.result.letter.title }}</h4>
+          <p class="letter">{{ r.result.letter.body }}</p>
+          <ul>
+            @for (step of r.result.letter.next_steps; track $index) {
+              <li>{{ step }}</li>
+            }
+          </ul>
+          <p class="hint">
+            Контролёр:
+            {{
+              r.result.audit.approved
+                ? '✓ цифры совпадают с расчётом'
+                : '! есть замечания: ' + r.result.audit.issues.join('; ')
+            }}
+          </p>
+        </div>
+      }
+    }
+  </article>
+
+  <details class="assumptions">
+    <summary>Допущения расчёта</summary>
+    <ul>
+      @for (a of c.assumptions; track $index) {
+        <li>{{ a }}</li>
+      }
+    </ul>
+  </details>
+}

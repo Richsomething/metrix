@@ -1,0 +1,185 @@
+:host {
+  display: block;
+}
+
+.panel {
+  padding: 16px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+h3 {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+h5 {
+  margin: 12px 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+p,
+li,
+dd,
+dt {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.hint,
+.status {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.controls,
+.ask {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 180px;
+  font-size: 12px;
+  color: var(--text-secondary);
+
+  &.grow {
+    flex: 1 1 320px;
+  }
+}
+
+select,
+textarea,
+button {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--surface-1);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+
+  &:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+}
+
+select,
+button {
+  height: 34px;
+  padding: 0 12px;
+}
+
+textarea {
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.primary {
+  cursor: pointer;
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    background: var(--hover);
+  }
+
+  &:disabled {
+    color: var(--text-muted);
+    cursor: default;
+  }
+}
+
+.error {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--critical);
+  border-radius: 8px;
+}
+
+.result {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 12px;
+  margin-top: 16px;
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+}
+
+.card {
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  .result & {
+    margin-top: 0;
+  }
+}
+
+.amount {
+  margin: 0 0 8px;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  margin: 0;
+
+  dt {
+    color: var(--text-secondary);
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.flag {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.letter {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.ok,
+.bad {
+  font-weight: 600;
+}
+
+.tools li {
+  color: var(--text-secondary);
+}

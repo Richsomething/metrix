@@ -1,0 +1,175 @@
+<section class="panel" aria-labelledby="agents-title">
+  <header>
+    <h3 id="agents-title">ИИ-агенты</h3>
+    <p class="hint">
+      Аналитик разбирает квартал, мотиватор пишет агенту письмо, контролёр сверяет каждую цифру с расчётом.
+      Сумму премии считает формула, а не ИИ.
+    </p>
+  </header>
+
+  <div class="controls">
+    <label class="field">
+      <span>Агент</span>
+      <select [value]="selectedAgent()" (change)="selectedAgent.set(selectValue($event))">
+        @for (agent of agents(); track agent) {
+          <option [value]="agent" [selected]="agent === selectedAgent()">{{ agent }}</option>
+        }
+      </select>
+    </label>
+    <label class="field">
+      <span>Завершённый квартал</span>
+      <select [value]="selectedQuarter()" (change)="selectedQuarter.set(selectValue($event))">
+        @for (quarter of quarters(); track quarter) {
+          <option [value]="quarter" [selected]="quarter === selectedQuarter()">{{ quarter }}</option>
+        }
+      </select>
+    </label>
+    <button type="button" class="primary" (click)="runReview()" [disabled]="review().status === 'loading'">
+      {{ review().status === 'loading' ? 'Агенты работают…' : 'Запустить агентов' }}
+    </button>
+  </div>
+
+  @switch (review().status) {
+    @case ('loading') {
+      <p class="status" role="status">Аналитик → мотиватор → контролёр. Обычно это занимает 1–2 минуты.</p>
+    }
+    @case ('error') {
+      @if (review(); as s) {
+        @if (s.status === 'error') {
+          <p class="error" role="alert">{{ s.message }}</p>
+        }
+      }
+    }
+    @case ('done') {
+      @if (review(); as s) {
+        @if (s.status === 'done') {
+          <div class="result">
+            <article class="card bonus">
+              <h4>Премия за {{ s.result.quarter }} — расчёт по формуле</h4>
+              <p class="amount">{{ formatMoney(s.result.bonus.amount) }}</p>
+              <dl>
+                <dt>Рекомендуемый план</dt>
+                <dd>{{ formatInteger(s.result.bonus.recommendedPlan) }}</dd>
+                <dt>Факт</dt>
+                <dd>{{ formatInteger(s.result.bonus.fact) }}</dd>
+                <dt>Выполнение</dt>
+                <dd>{{ formatPercent(s.result.bonus.completionPct) }}</dd>
+                <dt>Перевыполнение</dt>
+                <dd>{{ formatMoney(s.result.bonus.overperformance) }}</dd>
+              </dl>
+              @if (s.result.bonus.capped) {
+                <p class="flag">Достигнут потолок премии</p>
+              }
+              @if (s.result.bonus.refundPenalized) {
+                <p class="flag">Снижена из-за доли возвратов</p>
+              }
+              <p class="flag">{{ s.result.bonus.basis }}</p>
+            </article>
+
+            <article class="card">
+              <h4>Анализ</h4>
+              <p>{{ s.result.analysis.summary }}</p>
+              @if (s.result.analysis.strengths.length) {
+                <h5>Сильные стороны</h5>
+                <ul>
+                  @for (item of s.result.analysis.strengths; track $index) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              }
+              @if (s.result.analysis.risks.length) {
+                <h5>Риски</h5>
+                <ul>
+                  @for (item of s.result.analysis.risks; track $index) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              }
+            </article>
+
+            <article class="card wide">
+              <h4>{{ s.result.letter.title }}</h4>
+              <p class="letter">{{ s.result.letter.body }}</p>
+              <h5>Цели на следующий квартал</h5>
+              <ul>
+                @for (step of s.result.letter.next_steps; track $index) {
+                  <li>{{ step }}</li>
+                }
+              </ul>
+            </article>
+
+            <article class="card wide">
+              <h4>
+                Проверка контролёра:
+                <span [class.ok]="s.result.audit.approved" [class.bad]="!s.result.audit.approved">
+                  {{ s.result.audit.approved ? '✓ одобрено' : '! есть замечания' }}
+                </span>
+              </h4>
+              @if (s.result.revisions) {
+                <p class="hint">Письмо переписывалось после замечаний: {{ s.result.revisions }} раз.</p>
+              }
+              @if (s.result.audit.issues.length) {
+                <ul>
+                  @for (issue of s.result.audit.issues; track $index) {
+                    <li>{{ issue }}</li>
+                  }
+                </ul>
+              }
+              <h5>Инструменты, которые вызывали агенты</h5>
+              <ul class="tools">
+                @for (row of reviewTools(); track row.role) {
+                  <li><strong>{{ row.role }}:</strong> {{ row.tools }}</li>
+                }
+              </ul>
+              <h5>Модели</h5>
+              <ul class="tools">
+                @for (use of s.result.models; track $index) {
+                  <li>
+                    {{ use.role }}: {{ use.model }}
+                    @if (use.fallback_reason) {
+                      — резервная модель ({{ use.fallback_reason }})
+                    }
+                  </li>
+                }
+              </ul>
+            </article>
+          </div>
+        }
+      }
+    }
+  }
+
+  <div class="ask">
+    <label class="field grow">
+      <span>Вопрос ассистенту</span>
+      <textarea
+        rows="2"
+        maxlength="1000"
+        placeholder="Например: почему у Сато Кенъити премия за 2026Q3 такая маленькая?"
+        [value]="question()"
+        (input)="question.set(selectValue($event))"
+      ></textarea>
+    </label>
+    <button type="button" class="primary" (click)="runAsk()" [disabled]="!canAsk()">
+      {{ answer().status === 'loading' ? 'Думает…' : 'Спросить' }}
+    </button>
+  </div>
+
+  @if (answer(); as a) {
+    @if (a.status === 'error') {
+      <p class="error" role="alert">{{ a.message }}</p>
+    } @else if (a.status === 'done') {
+      <article class="card">
+        <p class="letter">{{ a.result.answer }}</p>
+        @if (answerTools().length) {
+          <p class="hint">
+            Инструменты:
+            @for (row of answerTools(); track row.role) {
+              {{ row.tools }}
+            }
+          </p>
+        }
+      </article>
+    }
+  }
+</section>

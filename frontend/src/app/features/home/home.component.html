@@ -1,0 +1,154 @@
+@if (options(); as o) {
+  <div class="controls">
+    <label class="field">
+      <span>Агент</span>
+      <select [value]="agent()" (change)="agent.set(textValue($event))">
+        @for (name of o.agents; track name) {
+          <option [value]="name" [selected]="name === agent()">{{ name }}</option>
+        }
+      </select>
+    </label>
+    <span class="hint">Дата расчёта {{ o.asOf }} · синтетические данные</span>
+  </div>
+}
+
+@if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+}
+
+@if (rec(); as r) {
+  <article class="card rates" aria-label="Ставки АВ по видам">
+    <h3>Ставки АВ по видам</h3>
+    <p class="income">
+      АВ {{ r.quarter }}: <strong>{{ money(r.income.current) }}</strong>
+      @if (r.planEffect?.salesEffect) {
+        <span class="plus">+{{ money(r.planEffect?.salesEffect) }} с планом</span>
+      }
+      · АВ {{ r.nextQuarter }}: <strong>{{ money(r.income.next) }}</strong>
+      @if (r.planEffect?.rateEffect) {
+        <span class="plus">+{{ money(r.planEffect?.rateEffect) }} с планом</span>
+      }
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Вид</th>
+            <th scope="col">База</th>
+            <th scope="col">{{ r.quarter }}</th>
+            <th scope="col">{{ r.nextQuarter }} прогноз</th>
+            <th scope="col">{{ r.nextQuarter }} если выполнить план</th>
+            <th scope="col">+ к базе</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of r.rates; track row.line) {
+            <tr>
+              <td>{{ row.title }}</td>
+              <td class="muted">{{ pct(row.base) }}</td>
+              <td>{{ pct(row.current) }}</td>
+              <td>{{ pct(row.next) }}</td>
+              <td class="with-plan">{{ pct(row.nextWithPlan) }}{{ row.cappedWithPlan ? '*' : '' }}</td>
+              <td class="added">{{ points(row.addedWithPlan) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (planBonuses(); as b) {
+      <p class="plan-line">План добавляет: {{ b }}. У КАСКО и КИС — не больше +5 п.п.</p>
+    }
+    <p class="hint">Ставка = база + доплаты: до +7 п.п., у КАСКО и КИС — до +5 п.п. * КАСКО не выше 30%. План — пункты 1 и 2 ниже.</p>
+  </article>
+
+  <div class="columns">
+    <article class="card">
+      <h3>1. Продлить портфель в {{ r.quarter }}</h3>
+      @if (r.portfolio.due === 0) {
+        <p class="hint">В {{ r.quarter }} у агента нет договоров к продлению — Доп.АВ3 в {{ r.nextQuarter }} не получить.</p>
+      } @else {
+        <p class="lead">
+          Продлите <strong>{{ r.portfolio.needed }} из {{ r.portfolio.due }}</strong> договоров
+          (≥ {{ pct(r.portfolio.atLeast) }}) → Доп.АВ3 {{ maxGain(r) }} ко всем видам в {{ r.nextQuarter }},
+          ≈ <strong>{{ money(r.portfolio.effects?.rateEffect) }}</strong> АВ.
+        </p>
+        @if (r.portfolio.expired) {
+          <p class="hint">{{ r.portfolio.expired }} уже закончились до {{ r.asOf }} — проверьте, продлены ли.</p>
+        }
+        @for (g of r.portfolio.groups; track g.product) {
+          <details class="group">
+            <summary>
+              <span>{{ g.title }} · {{ g.product }}</span>
+              <span class="count">{{ g.count }}</span>
+            </summary>
+            <ul class="contracts">
+              @for (c of g.contracts; track c.contract) {
+                <li [class.expired]="c.expired">
+                  <span>{{ c.contract }}</span>
+                  <span>до {{ date(c.endAt) }}{{ c.expired ? ' · срок прошёл' : '' }}</span>
+                </li>
+              }
+            </ul>
+          </details>
+        }
+      }
+    </article>
+
+    <article class="card">
+      <h3>2. Что продавать в {{ r.quarter }}</h3>
+      @if (planNeeded()) {
+        <p class="lead">
+          Нужно <strong>+{{ money(r.sell.total) }}</strong> приоритетных видов → ставки {{ r.nextQuarter }} растут,
+          ≈ <strong>{{ money(r.sell.effects?.total) }}</strong> АВ.
+          @if (r.sell.perRenewal) {
+            Предлагайте их при каждом продлении: ≈ {{ money(r.sell.perRenewal) }} на продление.
+          }
+        </p>
+      } @else {
+        <p class="lead">Доплаты за объём и долю приоритетных по прогнозу уже набраны — продавайте виды с высокой ставкой.</p>
+      }
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Вид</th>
+              <th scope="col">Ставка сейчас</th>
+              <th scope="col">АВ со 100 000 ₽</th>
+              <th scope="col">План</th>
+              <th scope="col">≈ Договоров</th>
+              <th scope="col">Ваши продукты</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of priorityRows(); track row.line) {
+              <tr>
+                <td>{{ row.title }}</td>
+                <td>{{ pct(row.rate) }}</td>
+                <td>{{ money(row.kvPerUnit) }}</td>
+                <td>{{ row.planAmount > 0 ? money(row.planAmount) : '—' }}</td>
+                <td>{{ row.planContracts ?? '—' }}</td>
+                <td class="products">{{ products(row) }}</td>
+              </tr>
+            }
+            @if (kaskoRow(); as k) {
+              <tr class="muted">
+                <td>{{ k.title }}</td>
+                <td>{{ pct(k.rate) }}</td>
+                <td>{{ money(k.kvPerUnit) }}</td>
+                <td colspan="3">через продление портфеля; новые продажи КАСКО снижают долю приоритетных</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="hint">План разложен по вашей структуре продаж; число договоров — оценка по среднему чеку.</p>
+    </article>
+  </div>
+
+
+  <p class="hint">
+    {{ r.notes[0] }} <button type="button" class="link" (click)="openDetails.emit()">Подробный расчёт АВ →</button>
+  </p>
+} @else if (!error()) {
+  <p class="hint" role="status">Готовлю рекомендации…</p>
+}

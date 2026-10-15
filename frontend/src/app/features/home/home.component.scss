@@ -1,0 +1,268 @@
+:host {
+  display: block;
+}
+
+h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 220px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+select {
+  height: 34px;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--surface-1);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+
+  &:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+}
+
+.hint {
+  margin: 4px 0 8px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.lead {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.error {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  font-size: 13px;
+  border: 1px solid var(--critical);
+  border-radius: 8px;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tile,
+.card {
+  padding: 16px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.tile {
+  p {
+    margin: 0;
+  }
+
+  .label {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .value {
+    margin-top: 6px;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .note {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .before {
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .note.plan {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .gain {
+    margin-left: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--focus);
+  }
+
+  &.accent {
+    border-color: var(--focus);
+    border-width: 2px;
+  }
+}
+
+.rates {
+  .income {
+    margin: 0 0 12px;
+    font-size: 14px;
+    color: var(--text-secondary);
+
+    strong {
+      color: var(--text-primary);
+    }
+  }
+
+  .plus,
+  .gain {
+    margin-left: 4px;
+    font-weight: 600;
+    color: var(--focus);
+  }
+
+  td.with-plan {
+    font-weight: 600;
+    color: var(--focus);
+  }
+
+  td.added {
+    font-weight: 600;
+  }
+
+  td.muted {
+    color: var(--text-secondary);
+  }
+
+  .plan-line {
+    margin: 10px 0 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.card {
+  min-width: 0;
+  margin-bottom: 16px;
+}
+
+.group {
+  border-top: 1px solid var(--grid);
+
+  summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    font-size: 13px;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .count {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.contracts {
+  max-height: 240px;
+  margin: 0 0 8px;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    color: var(--text-secondary);
+
+    &.expired {
+      color: var(--text-muted);
+    }
+  }
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  padding: 6px 8px;
+  text-align: right;
+  border-bottom: 1px solid var(--grid);
+  color: var(--text-primary);
+  white-space: nowrap;
+
+  &:first-child {
+    text-align: left;
+  }
+}
+
+th {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+td.products {
+  max-width: 260px;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  color: var(--text-secondary);
+}
+
+tr.muted td {
+  color: var(--text-secondary);
+}
+
+.link {
+  padding: 0;
+  font: inherit;
+  color: var(--focus);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+

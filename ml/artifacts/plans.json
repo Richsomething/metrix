@@ -1,0 +1,1244 @@
+[
+  {
+    "agent": "Ватанабэ Ёко",
+    "quarter": "2025Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 2869781.2,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 2869780.55,
+    "refundShare": 0.0123,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 2798747.1
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 71034.1
+      }
+    ]
+  },
+  {
+    "agent": "Ито Такуя",
+    "quarter": "2025Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 979352.43,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 979352.3,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 955111.1
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 24241.33
+      }
+    ]
+  },
+  {
+    "agent": "Кобаяси Коити",
+    "quarter": "2025Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1282071.66,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1282071.67,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1250337.19
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 31734.47
+      }
+    ]
+  },
+  {
+    "agent": "Накамура Ай",
+    "quarter": "2025Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1058809.76,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1058808.72,
+    "refundShare": 0.0056,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1032601.66
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 26208.1
+      }
+    ]
+  },
+  {
+    "agent": "Сато Кенъити",
+    "quarter": "2025Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 6084113.63,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 6084112.91,
+    "refundShare": 0.0206,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 5933516.81
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 150596.82
+      }
+    ]
+  },
+  {
+    "agent": "Судзуки Ханако",
+    "quarter": "2025Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 7681932.85,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 7681932.59,
+    "refundShare": 0.027,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 7491786.19
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 190146.66
+      }
+    ]
+  },
+  {
+    "agent": "Такахаси Сёта",
+    "quarter": "2025Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1877165.28,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1877165.3,
+    "refundShare": 0.0438,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1830700.79
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 46464.49
+      }
+    ]
+  },
+  {
+    "agent": "Танака Мисаки",
+    "quarter": "2025Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1183487.68,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1183487.73,
+    "refundShare": 0.0027,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1154193.44
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 29294.24
+      }
+    ]
+  },
+  {
+    "agent": "Ямамото Наоки",
+    "quarter": "2025Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 571302.26,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 571302.23,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 557161.11
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 14141.15
+      }
+    ]
+  },
+  {
+    "agent": "Ватанабэ Ёко",
+    "quarter": "2025Q4",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 2940814.69,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 2940813.98,
+    "refundShare": 0.0123,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 2869780.55
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 71034.14
+      }
+    ]
+  },
+  {
+    "agent": "Ито Такуя",
+    "quarter": "2025Q4",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1003593.72,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1003593.54,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 979352.3
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 24241.42
+      }
+    ]
+  },
+  {
+    "agent": "Кобаяси Коити",
+    "quarter": "2025Q4",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1313806.1,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1313806.09,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1282071.67
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 31734.43
+      }
+    ]
+  },
+  {
+    "agent": "Накамура Ай",
+    "quarter": "2025Q4",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1085016.84,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1085015.78,
+    "refundShare": 0.0056,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1058808.72
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 26208.12
+      }
+    ]
+  },
+  {
+    "agent": "Сато Кенъити",
+    "quarter": "2025Q4",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 6234709.79,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 6234709.16,
+    "refundShare": 0.0206,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 6084112.91
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 150596.88
+      }
+    ]
+  },
+  {
+    "agent": "Судзуки Ханако",
+    "quarter": "2025Q4",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 7872079.49,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 7872078.85,
+    "refundShare": 0.027,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 7681932.59
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 190146.9
+      }
+    ]
+  },
+  {
+    "agent": "Такахаси Сёта",
+    "quarter": "2025Q4",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1923629.78,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1923629.78,
+    "refundShare": 0.0438,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1877165.3
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 46464.48
+      }
+    ]
+  },
+  {
+    "agent": "Танака Мисаки",
+    "quarter": "2025Q4",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1212781.89,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1212781.94,
+    "refundShare": 0.0027,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1183487.73
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 29294.16
+      }
+    ]
+  },
+  {
+    "agent": "Ямамото Наоки",
+    "quarter": "2025Q4",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 585443.37,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 585443.35,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 571302.23
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 14141.14
+      }
+    ]
+  },
+  {
+    "agent": "Ватанабэ Ёко",
+    "quarter": "2026Q1",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 3011848.19,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 3011848.87,
+    "refundShare": 0.0123,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 2940813.98
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 71034.21
+      }
+    ]
+  },
+  {
+    "agent": "Ито Такуя",
+    "quarter": "2026Q1",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1027834.97,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1027835.1,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1003593.54
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 24241.43
+      }
+    ]
+  },
+  {
+    "agent": "Кобаяси Коити",
+    "quarter": "2026Q1",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1345540.54,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1345540.54,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1313806.09
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 31734.45
+      }
+    ]
+  },
+  {
+    "agent": "Накамура Ай",
+    "quarter": "2026Q1",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1111223.93,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1111225.03,
+    "refundShare": 0.0056,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1085015.78
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 26208.15
+      }
+    ]
+  },
+  {
+    "agent": "Сато Кенъити",
+    "quarter": "2026Q1",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 6385306.04,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 6385306.61,
+    "refundShare": 0.0206,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 6234709.16
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 150596.88
+      }
+    ]
+  },
+  {
+    "agent": "Судзуки Ханако",
+    "quarter": "2026Q1",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 8062225.86,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 8062226.27,
+    "refundShare": 0.027,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 7872078.85
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 190147.01
+      }
+    ]
+  },
+  {
+    "agent": "Такахаси Сёта",
+    "quarter": "2026Q1",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1970094.28,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1970094.29,
+    "refundShare": 0.0438,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1923629.78
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 46464.5
+      }
+    ]
+  },
+  {
+    "agent": "Танака Мисаки",
+    "quarter": "2026Q1",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1242076.18,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1242076.19,
+    "refundShare": 0.0027,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1212781.94
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 29294.24
+      }
+    ]
+  },
+  {
+    "agent": "Ямамото Наоки",
+    "quarter": "2026Q1",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 599584.5,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 599584.56,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 585443.35
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 14141.15
+      }
+    ]
+  },
+  {
+    "agent": "Ватанабэ Ёко",
+    "quarter": "2026Q2",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 3082882.31,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 3082883.74,
+    "refundShare": 0.0123,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 3011848.87
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 71033.44
+      }
+    ]
+  },
+  {
+    "agent": "Ито Такуя",
+    "quarter": "2026Q2",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1052076.32,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1052076.58,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1027835.1
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 24241.22
+      }
+    ]
+  },
+  {
+    "agent": "Кобаяси Коити",
+    "quarter": "2026Q2",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1377274.99,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1377275.01,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1345540.54
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 31734.45
+      }
+    ]
+  },
+  {
+    "agent": "Накамура Ай",
+    "quarter": "2026Q2",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1137432.09,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1137434.2,
+    "refundShare": 0.0056,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1111225.03
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 26207.06
+      }
+    ]
+  },
+  {
+    "agent": "Сато Кенъити",
+    "quarter": "2026Q2",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 6535902.79,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 6535904.14,
+    "refundShare": 0.0206,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 6385306.61
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 150596.17
+      }
+    ]
+  },
+  {
+    "agent": "Судзуки Ханако",
+    "quarter": "2026Q2",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 8252372.6,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 8252373.25,
+    "refundShare": 0.027,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 8062226.27
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 190146.33
+      }
+    ]
+  },
+  {
+    "agent": "Такахаси Сёта",
+    "quarter": "2026Q2",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 2016558.79,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 2016558.7,
+    "refundShare": 0.0438,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1970094.29
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 46464.5
+      }
+    ]
+  },
+  {
+    "agent": "Танака Мисаки",
+    "quarter": "2026Q2",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1271370.44,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1271370.58,
+    "refundShare": 0.0027,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1242076.19
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 29294.25
+      }
+    ]
+  },
+  {
+    "agent": "Ямамото Наоки",
+    "quarter": "2026Q2",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 613725.68,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 613725.66,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 599584.56
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 14141.12
+      }
+    ]
+  },
+  {
+    "agent": "Ватанабэ Ёко",
+    "quarter": "2026Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 3153917.9,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 3153917.17,
+    "refundShare": 0.0123,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 3082883.74
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 71034.16
+      }
+    ]
+  },
+  {
+    "agent": "Ито Такуя",
+    "quarter": "2026Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1076317.98,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1076317.8,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1052076.58
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 24241.4
+      }
+    ]
+  },
+  {
+    "agent": "Кобаяси Коити",
+    "quarter": "2026Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1409009.45,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1409009.42,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1377275.01
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 31734.44
+      }
+    ]
+  },
+  {
+    "agent": "Накамура Ай",
+    "quarter": "2026Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1163642.36,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1163641.25,
+    "refundShare": 0.0056,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1137434.2
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 26208.16
+      }
+    ]
+  },
+  {
+    "agent": "Сато Кенъити",
+    "quarter": "2026Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 6686500.99,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 6686500.18,
+    "refundShare": 0.0206,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 6535904.14
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 150596.85
+      }
+    ]
+  },
+  {
+    "agent": "Судзуки Ханако",
+    "quarter": "2026Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 8442520.09,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 8442519.37,
+    "refundShare": 0.027,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 8252373.25
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 190146.84
+      }
+    ]
+  },
+  {
+    "agent": "Такахаси Сёта",
+    "quarter": "2026Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 2063023.2,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 2063023.24,
+    "refundShare": 0.0438,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 2016558.7
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 46464.5
+      }
+    ]
+  },
+  {
+    "agent": "Танака Мисаки",
+    "quarter": "2026Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 1300664.81,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 1300664.7,
+    "refundShare": 0.0027,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1271370.58
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 29294.23
+      }
+    ]
+  },
+  {
+    "agent": "Ямамото Наоки",
+    "quarter": "2026Q3",
+    "kind": "completed",
+    "isForecast": false,
+    "recommendedPlan": 627866.83,
+    "approvedPlan": null,
+    "bonusBasis": "recommended_plan",
+    "fact": 627866.75,
+    "refundShare": -0.0,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 613725.66
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 14141.17
+      }
+    ]
+  },
+  {
+    "agent": "Ватанабэ Ёко",
+    "quarter": "2026Q4",
+    "kind": "forecast",
+    "isForecast": true,
+    "recommendedPlan": 3224952.05,
+    "approvedPlan": null,
+    "bonusBasis": null,
+    "fact": null,
+    "refundShare": null,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 3153917.17
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 71034.88
+      }
+    ]
+  },
+  {
+    "agent": "Ито Такуя",
+    "quarter": "2026Q4",
+    "kind": "forecast",
+    "isForecast": true,
+    "recommendedPlan": 1100559.32,
+    "approvedPlan": null,
+    "bonusBasis": null,
+    "fact": null,
+    "refundShare": null,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1076317.8
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 24241.52
+      }
+    ]
+  },
+  {
+    "agent": "Кобаяси Коити",
+    "quarter": "2026Q4",
+    "kind": "forecast",
+    "isForecast": true,
+    "recommendedPlan": 1440743.88,
+    "approvedPlan": null,
+    "bonusBasis": null,
+    "fact": null,
+    "refundShare": null,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1409009.42
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 31734.46
+      }
+    ]
+  },
+  {
+    "agent": "Накамура Ай",
+    "quarter": "2026Q4",
+    "kind": "forecast",
+    "isForecast": true,
+    "recommendedPlan": 1189850.46,
+    "approvedPlan": null,
+    "bonusBasis": null,
+    "fact": null,
+    "refundShare": null,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1163641.25
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 26209.21
+      }
+    ]
+  },
+  {
+    "agent": "Сато Кенъити",
+    "quarter": "2026Q4",
+    "kind": "forecast",
+    "isForecast": true,
+    "recommendedPlan": 6837097.67,
+    "approvedPlan": null,
+    "bonusBasis": null,
+    "fact": null,
+    "refundShare": null,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 6686500.18
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 150597.49
+      }
+    ]
+  },
+  {
+    "agent": "Судзуки Ханако",
+    "quarter": "2026Q4",
+    "kind": "forecast",
+    "isForecast": true,
+    "recommendedPlan": 8632666.57,
+    "approvedPlan": null,
+    "bonusBasis": null,
+    "fact": null,
+    "refundShare": null,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 8442519.37
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 190147.2
+      }
+    ]
+  },
+  {
+    "agent": "Такахаси Сёта",
+    "quarter": "2026Q4",
+    "kind": "forecast",
+    "isForecast": true,
+    "recommendedPlan": 2109487.7,
+    "approvedPlan": null,
+    "bonusBasis": null,
+    "fact": null,
+    "refundShare": null,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 2063023.24
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 46464.46
+      }
+    ]
+  },
+  {
+    "agent": "Танака Мисаки",
+    "quarter": "2026Q4",
+    "kind": "forecast",
+    "isForecast": true,
+    "recommendedPlan": 1329959.02,
+    "approvedPlan": null,
+    "bonusBasis": null,
+    "fact": null,
+    "refundShare": null,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 1300664.7
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 29294.32
+      }
+    ]
+  },
+  {
+    "agent": "Ямамото Наоки",
+    "quarter": "2026Q4",
+    "kind": "forecast",
+    "isForecast": true,
+    "recommendedPlan": 642007.91,
+    "approvedPlan": null,
+    "bonusBasis": null,
+    "fact": null,
+    "refundShare": null,
+    "contributions": [
+      {
+        "key": "base",
+        "label": "База: сборы прошлого квартала",
+        "value": 627866.75
+      },
+      {
+        "key": "trend",
+        "label": "Линейный тренд",
+        "value": 14141.16
+      }
+    ]
+  }
+]

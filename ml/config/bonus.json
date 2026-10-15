@@ -1,0 +1,7 @@
+{
+  "rate": 0.05,
+  "threshold": 0.0,
+  "cap_per_quarter": 150000,
+  "max_refund_share": 0.1,
+  "refund_penalty": 0.5
+}

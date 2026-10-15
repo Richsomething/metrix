@@ -1,0 +1,101 @@
+<header class="page-head">
+  <div>
+    <h1>Метрики агентов</h1>
+    <p class="lead">Кабинет мотивации агента: прогноз дохода и что сделать в этом квартале</p>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Разделы">
+  @for (t of tabs; track t.id) {
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="tab() === t.id"
+      [class.active]="tab() === t.id"
+      (click)="select(t.id)"
+    >
+      {{ t.title }}
+    </button>
+  }
+</nav>
+
+@switch (tab()) {
+  @case ('home') {
+    <app-home (openDetails)="select('av')" />
+  }
+  @case ('av') {
+    <app-motivation />
+  }
+  @case ('analytics') {
+<!-- Separate mechanism: overperformance bonus details; the filters below only drive the charts. -->
+<app-bonus-section [withForecast]="false" />
+
+<h2>Сборы и пролонгация, 2024 Q1 — 2026 Q4 (синтетические данные)</h2>
+
+@if (filterOptions.hasValue() && filterOptions.value().data; as options) {
+  <app-filter-bar
+    [options]="options"
+    [value]="filters()"
+    (changed)="onFilterChange($event)"
+    (reset)="resetFilters()"
+  />
+}
+@if (dashboard.isLoading()) {
+  <p class="status" role="status">Обновляю…</p>
+}
+
+@if (errorMessage()) {
+  <p class="error" role="alert">{{ errorMessage() }}</p>
+}
+
+@if (charts(); as c) {
+  <section class="kpis" aria-label="Ключевые показатели">
+    @for (kpi of kpis(); track kpi.label) {
+      <app-kpi-tile [label]="kpi.label" [value]="kpi.value" [hint]="kpi.hint" />
+    }
+  </section>
+
+  <h2>Сборы</h2>
+  <section class="grid">
+    <app-chart-card title="Сборы по кварталам" subtitle="Сумма сборов за отчётный период" [view]="c.quarterly" />
+    <app-chart-card title="Сборы по линиям бизнеса" subtitle="Топ-5 линий, остальные — «Прочие»" [view]="c.lines" />
+    <app-chart-card title="Сборы по агентам" [view]="c.agents" [height]="c.agentsHeight" />
+    <app-chart-card title="Топ-10 продуктов" [view]="c.products" [height]="c.productsHeight" />
+    <app-chart-card title="Сборы по филиалам" [view]="c.branches" height="240px" />
+    <app-chart-card title="Сборы по группам филиалов" [view]="c.groups" height="240px" />
+    <app-chart-card
+      class="wide"
+      title="Агенты × кварталы"
+      subtitle="Чем темнее ячейка, тем больше сборы"
+      [view]="c.heatmap"
+      [height]="c.heatmapHeight"
+    />
+    <app-chart-card
+      class="wide"
+      title="Стаж агента и сборы"
+      subtitle="Стаж от даты первого агентского договора"
+      [view]="c.tenure"
+      height="320px"
+    />
+  </section>
+
+  <h2>Пролонгация</h2>
+  <p class="note">
+    Колонки результата пролонгации в выгрузке пустые, поэтому показано только количество договоров, подходящих к
+    пролонгации.
+  </p>
+  <section class="grid">
+    <app-chart-card
+      class="wide"
+      title="Договоры к пролонгации по месяцам"
+      subtitle="По дате окончания договора"
+      [view]="c.prolongMonth"
+    />
+    <app-chart-card title="К пролонгации по агентам" [view]="c.prolongAgent" [height]="c.prolongAgentHeight" />
+    <app-chart-card title="К пролонгации по продуктам" [view]="c.prolongProduct" [height]="c.prolongProductHeight" />
+  </section>
+} @else if (!errorMessage()) {
+  <p class="status" role="status">Загружаю данные…</p>
+}
+  }
+}

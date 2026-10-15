@@ -1,0 +1,158 @@
+<h2>Премия за перевыполнение плана — отдельный механизм (синтетические данные)</h2>
+
+@if (errorMessage()) {
+  <p class="error" role="alert">{{ errorMessage() }}</p>
+} @else if (isLoading() && !metrics()) {
+  <p class="status" role="status">Загружаю данные ML-сервиса…</p>
+}
+
+@if (metrics(); as m) {
+  @if (withForecast()) {
+    <app-bonus-forecast [agents]="m.agents" [defaultAgent]="agent()" />
+  }
+
+  <details class="more" [open]="!withForecast()">
+    <summary>Подробнее: допущения, премии за прошлые кварталы, сценарии, ИИ-агенты</summary>
+
+  <div class="notice" role="note">
+    <p>
+      <strong>Дата отчёта {{ m.asOf }}.</strong> Завершённые кварталы — по {{ m.lastCompletedQuarter }};
+      {{ formatInteger(m.futureRowsExcluded) }} записей незавершённых кварталов исключены из обучения,
+      бэктеста и премий. {{ m.datasetNote }}
+    </p>
+    <p>
+      <strong>Ограничение:</strong> в выгрузке нет утверждённых планов, поэтому премия за завершённый квартал
+      считается против «{{ planLabel }}»{{ chosenTitle() ? ' (модель «' + chosenTitle() + '»)' : '' }} — это
+      допущение демонстрации. Корректный порядок: руководство утверждает план до начала квартала, рекомендуемый
+      план служит ориентиром, премия считается против утверждённого плана.
+    </p>
+  </div>
+
+  <h3>Завершённые кварталы: расчёт премии</h3>
+  @if (completed(); as c) {
+    @if (c.empty) {
+      <p class="status">
+        За выбранный период нет завершённых кварталов с рекомендуемым планом (планы есть начиная с
+        {{ c.firstPlanned }}).
+      </p>
+    } @else {
+      <section class="kpis" aria-label="Показатели премий за завершённые кварталы">
+        @for (kpi of c.kpis; track kpi.label) {
+          <app-kpi-tile [label]="kpi.label" [value]="kpi.value" [hint]="kpi.hint" />
+        }
+      </section>
+      <section class="grid">
+        <app-chart-card
+          class="wide"
+          title="Рекомендуемый план и фактические сборы"
+          subtitle="План каждого квартала построен только по предыдущим кварталам"
+          [view]="c.planFact"
+        />
+        <app-chart-card
+          title="Премии по агентам"
+          subtitle="Сумма за завершённые кварталы выбранного периода"
+          [view]="c.bonusByAgent"
+          [height]="c.bonusHeight"
+        />
+        <app-chart-card
+          title="Качество моделей-кандидатов"
+          subtitle="Ошибка на невиденных кварталах, синтетический набор"
+          [view]="c.quality"
+          height="200px"
+        />
+      </section>
+    }
+  }
+
+  <h3>Будущий квартал {{ m.forecastQuarter }}: прогноз и сценарии — не начисление</h3>
+  @if (forecastData(); as f) {
+    <div class="future">
+      <app-kpi-tile
+        [label]="planLabel + ', ' + f.quarter"
+        [value]="formatMoney(f.totalRecommendedPlan)"
+        [hint]="agent() ? agent() : 'все агенты'"
+      />
+      <p class="limitation">{{ f.limitation }}</p>
+    </div>
+  }
+
+  @if (scenarioError()) {
+    <p class="error" role="alert">{{ scenarioError() }}</p>
+  } @else if (scenarioData(); as s) {
+    <article class="scenarios">
+      <header>
+        <span class="badge">Демонстрация</span>
+        <h4>Сценарии правил премирования — {{ s.agent }}, {{ s.quarter }}</h4>
+        <p class="hint">
+          План сценариев: {{ s.planSource }} — {{ formatInteger(s.plan) }}. Параметры из bonus.json: ставка
+          {{ formatPercent(s.config.rate * 100) }} от перевыполнения, порог +{{ formatPercent(s.config.threshold * 100) }}
+          к плану, потолок {{ formatInteger(s.config.cap_per_quarter) }} за квартал, при доле возвратов выше
+          {{ formatPercent(s.config.max_refund_share * 100) }} премия снижается до
+          {{ formatPercent(s.config.refund_penalty * 100) }} от рассчитанной. Суммы
+          иллюстративные, это не выплаты.
+          @if (!agent()) {
+            Выберите агента в фильтре сверху, чтобы увидеть его сценарии.
+          }
+        </p>
+      </header>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Сценарий</th>
+              <th scope="col">Факт</th>
+              <th scope="col">Выполнение</th>
+              <th scope="col">Доля возвратов</th>
+              <th scope="col">Перевыполнение</th>
+              <th scope="col">Премия</th>
+              <th scope="col">Отметки</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of s.scenarios; track row.key) {
+              <tr>
+                <td>{{ row.title }}</td>
+                <td>{{ formatInteger(row.fact) }}</td>
+                <td>{{ formatPercent(row.completion * 100) }}</td>
+                <td>{{ formatPercent(row.refundShare * 100) }}</td>
+                <td>{{ formatInteger(row.overperformance) }}</td>
+                <td class="amount">{{ formatInteger(row.amount) }}</td>
+                <td>
+                  {{ row.capped ? 'потолок' : '' }}{{ row.capped && row.refundPenalized ? ', ' : ''
+                  }}{{ row.refundPenalized ? 'снижена за возвраты' : '' }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+  }
+
+  <details class="lineage">
+    <summary>Откуда берутся показатели</summary>
+    <dl>
+      <dt>Установленный (утверждённый) план</dt>
+      <dd>В выгрузке отсутствует (approvedPlan = null).</dd>
+      <dt>{{ planLabel }}</dt>
+      <dd>
+        Модель «{{ chosenTitle() }}», обученная только на кварталах до планируемого (walk-forward). Для будущего
+        квартала — прогноз по всем завершённым кварталам.
+      </dd>
+      <dt>Фактические сборы</dt>
+      <dd>Сумма поля «Сумма сборов» листа «сборы» за отчётный период, включая отрицательные записи (возвраты).</dd>
+      <dt>Прогноз сборов</dt>
+      <dd>Тот же рекомендуемый план будущего квартала; факта у него нет, поэтому и премии нет.</dd>
+      <dt>Возвраты</dt>
+      <dd>Сумма отрицательных записей; доля возвратов = возвраты / положительные сборы квартала.</dd>
+      <dt>Премия</dt>
+      <dd>
+        Только для завершённого квартала: min(потолок, ставка × max(0, факт − план × (1 + порог))), при доле
+        возвратов выше допустимой — × множитель. Параметры — в ml/config/bonus.json.
+      </dd>
+    </dl>
+  </details>
+
+  <app-ai-agents-panel [agents]="m.agents" [quarters]="m.plannedQuarters" [defaultAgent]="agent()" />
+  </details>
+}
