@@ -91,8 +91,8 @@ export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
           itemStyle: {
             color: t.sequential[0],
             borderColor: t.series[0],
-            borderWidth: 2,
-            borderType: 'dashed',
+            borderWidth: 1,
+            borderType: [4, 3],
             borderRadius: [RADIUS, RADIUS, 0, 0],
           },
           label: {
