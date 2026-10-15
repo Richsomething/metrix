@@ -38,44 +38,55 @@
           <p class="headline">
             Собрано <strong>{{ k.collected }}</strong> из <strong>{{ k.total }}</strong>
           </p>
-          <div
-            class="progress"
-            role="img"
-            [attr.aria-label]="'Собрано ' + k.collected + ' из ' + k.total"
-          >
-            <span class="done" [style.width.%]="k.collectedPct"></span>
-            <span class="rest" [style.width.%]="k.restPct"></span>
-            <span
-              class="extra"
-              tabindex="0"
-              [class.open]="extraOpen()"
-              [style.width.%]="k.extraPct"
-              [attr.aria-label]="'Надо продать ещё ' + k.extra + ', по видам'"
-              (mouseenter)="extraOpen.set(true)"
-              (mouseleave)="extraOpen.set(false)"
-              (focus)="extraOpen.set(true)"
-              (blur)="extraOpen.set(false)"
-              (click)="extraOpen.set(!extraOpen())"
+          <div class="bar">
+            <div
+              class="progress"
+              role="img"
+              [attr.aria-label]="'Собрано ' + k.collected + ' из ' + k.total"
             >
-              @if (extraOpen()) {
-                @for (line of k.lines; track line.title) {
-                  <i [style.flex-grow]="line.share" [style.background]="line.shade"></i>
+              <span class="done" [style.width.%]="k.collectedPct"></span>
+              <span class="rest" [style.width.%]="k.restPct"></span>
+              <span
+                class="extra"
+                tabindex="0"
+                [style.width.%]="k.extraPct"
+                [attr.aria-label]="'Надо продать ещё ' + k.extra + ', по видам'"
+                (mouseenter)="extraOpen.set(true)"
+                (mouseleave)="extraOpen.set(false); activeLine.set(-1)"
+                (focus)="extraOpen.set(true)"
+                (blur)="extraOpen.set(false)"
+                (click)="extraOpen.set(!extraOpen())"
+              >
+                @for (line of k.lines; track line.title; let i = $index) {
+                  <i
+                    [style.flex-grow]="line.share"
+                    [style.background]="line.shade"
+                    [class.active]="activeLine() === i"
+                    (mouseenter)="activeLine.set(i)"
+                  ></i>
                 }
-              }
-            </span>
+              </span>
+            </div>
+            @if (extraOpen()) {
+              <div class="popup" role="tooltip">
+                <div class="popup-title">Что продать ещё на {{ k.extra }}</div>
+                @for (line of k.lines; track line.title; let i = $index) {
+                  <div class="popup-row" [class.active]="activeLine() === i">
+                    <span class="name"
+                      ><i [style.background]="line.shade"></i>{{ line.title }}</span
+                    >
+                    <span class="mini"><i [style.width.%]="line.relative"></i></span>
+                    <span class="amount">{{ line.amount }}</span>
+                    <span class="contracts">
+                      @if (line.contracts) {
+                        ≈ {{ line.contracts }} дог.
+                      }
+                    </span>
+                  </div>
+                }
+              </div>
+            }
           </div>
-          @if (extraOpen()) {
-            <ul class="extra-lines" [style.margin-left.%]="k.collectedPct + k.restPct">
-              @for (line of k.lines; track line.title) {
-                <li>
-                  <i [style.background]="line.shade"></i><b>{{ line.title }}</b> {{ line.amount }}
-                  @if (line.contracts) {
-                    <span class="muted">≈ {{ line.contracts }} дог.</span>
-                  }
-                </li>
-              }
-            </ul>
-          }
           <div class="tiles">
             <div class="tile">
               <div class="value done">{{ k.collected }}</div>

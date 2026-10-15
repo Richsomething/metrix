@@ -93,6 +93,10 @@ select {
     color: var(--text-primary);
   }
 
+  .bar {
+    position: relative;
+  }
+
   .progress {
     display: flex;
     gap: 2px;
@@ -116,49 +120,94 @@ select {
       display: flex;
       gap: 2px;
       cursor: pointer;
-      background: var(--extra);
-
-      &.open {
-        background: transparent;
-      }
 
       &:focus-visible {
         outline: 2px solid var(--focus);
-        outline-offset: 2px;
+        outline-offset: -2px;
       }
 
       i {
         flex-basis: 0;
         min-width: 3px;
+        transition: filter 0.15s;
+
+        &.active {
+          filter: brightness(0.88);
+        }
       }
     }
   }
 
-  .extra-lines {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    margin: 6px 0 0;
-    padding: 0;
-    font-size: 12px;
+  // floats over the tiles, so opening it never moves the layout
+  .popup {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 10;
+    width: min(360px, 100%);
+    padding: 10px 12px;
+    font-size: 13px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+    pointer-events: none;
+  }
+
+  .popup-title {
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .popup-row {
+    display: grid;
+    grid-template-columns: 64px 1fr 90px 70px;
+    gap: 8px;
+    align-items: center;
+    padding: 3px 4px;
+    margin: 0 -4px;
     color: var(--text-secondary);
-    list-style: none;
-    white-space: nowrap;
+    border-radius: 4px;
 
-    i {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      margin-right: 5px;
-      border-radius: 2px;
+    &.active {
+      background: var(--hover);
     }
 
-    b {
+    .name {
+      font-weight: 600;
       color: var(--text-primary);
+
+      i {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 6px;
+        border-radius: 2px;
+      }
     }
 
-    .muted {
-      margin-left: 4px;
+    .mini {
+      height: 8px;
+      background: var(--hover);
+      border-radius: 4px;
+
+      i {
+        display: block;
+        height: 100%;
+        background: var(--extra);
+        border-radius: 4px;
+      }
+    }
+
+    .amount {
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: right;
+    }
+
+    .contracts {
+      font-size: 12px;
       color: var(--text-muted);
     }
   }

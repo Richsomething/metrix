@@ -66,6 +66,11 @@ export class HomeChartsComponent {
     const extra = r.sell.total;
     const total = collected + rest + extra;
     const share = (v: number): number => (total > 0 ? (v / total) * 100 : 0);
+    // the orange part is split by the priority lines of the sales plan, biggest first
+    const lines = r.sell.rows
+      .filter((row) => row.priority && row.planAmount > 0)
+      .sort((a, b) => b.planAmount - a.planAmount);
+    const largest = lines[0]?.planAmount ?? 0;
     return {
       collected: this.money(collected),
       rest: this.money(rest),
@@ -74,21 +79,21 @@ export class HomeChartsComponent {
       collectedPct: share(collected),
       restPct: share(rest),
       extraPct: share(extra),
-      // the extra split by priority line, shown when the orange part is hovered or tapped
-      lines: r.sell.rows
-        .filter((row) => row.priority && row.planAmount > 0)
-        .map((row, i) => ({
-          title: row.title,
-          amount: this.money(row.planAmount),
-          contracts: row.planContracts,
-          share: row.planAmount,
-          shade: EXTRA_SHADES[Math.min(i, EXTRA_SHADES.length - 1)],
-        })),
+      lines: lines.map((row, i) => ({
+        title: row.title,
+        amount: this.money(row.planAmount),
+        contracts: row.planContracts,
+        share: row.planAmount,
+        relative: largest > 0 ? (row.planAmount / largest) * 100 : 0,
+        shade: EXTRA_SHADES[Math.min(i, EXTRA_SHADES.length - 1)],
+      })),
     };
   });
 
-  /** The orange part is split by line while hovered, focused or tapped. */
+  /** The popup with the sales plan by line is open while the orange part is hovered, focused or tapped. */
   protected readonly extraOpen = signal(false);
+  /** The line under the cursor, highlighted in the popup; −1 for none. */
+  protected readonly activeLine = signal(-1);
 
   protected money(value: number): string {
     return `${formatCompact(value)} ₽`;
