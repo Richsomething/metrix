@@ -21,10 +21,10 @@
     <section class="grid">
       <app-chart-card
         class="wide"
-        title="Ставки АВ по видам"
-        subtitle="Ставка КВ и число договоров, от которых она считается: ставку квартала дают продажи предыдущего"
+        title="Сколько можно добавить к ставке"
+        [subtitle]="'Ставка АВ ' + r.nextQuarter + ': прогноз и прирост в максимальном варианте'"
         [view]="c.rates"
-        [height]="c.ratesHeight"
+        height="340px"
       />
       <app-chart-card
         title="Доход АВ"

@@ -25,118 +25,103 @@ function contractsWord(n: number): string {
   return 'договоров';
 }
 
-/** «2026Q4» → «2026Q3». */
-function previousQuarter(quarter: string): string {
-  const [year, q] = quarter.split('Q').map(Number);
-  return q === 1 ? `${year - 1}Q4` : `${year}Q${q - 1}`;
-}
-
 /**
- * АВ rates by line as horizontal bars, readable without the table: every bar says its rate, how many contracts it
- * stands on and from which quarter (quarter T's rate comes from the sales of T−1); the target also says its gain.
+ * Next quarter's АВ rate by line: the forecast as the column, the gain in the maximum option stacked on top.
+ * Contract counts behind both live in the tooltip and the table, not on the chart.
  */
 export function ratesChart(r: KvRecommendations, t: ChartTokens): ChartView {
-  const reporting = previousQuarter(r.quarter);
-  const series = [
-    {
-      name: `${r.quarter} — действует сейчас`,
-      color: t.series[1],
-      rates: r.rates.map((x) => x.current),
-      contracts: r.rates.map((x) => x.contracts.current),
-      source: `за ${reporting}`,
-      estimate: false,
-    },
-    {
-      name: `${r.nextQuarter} — прогноз при текущих продажах`,
-      color: t.series[2],
-      rates: r.rates.map((x) => x.next),
-      contracts: r.rates.map((x) => x.contracts.next),
-      source: `за ${r.quarter}`,
-      estimate: true,
-    },
-    {
-      name: `${r.nextQuarter} — цель, максимальный вариант`,
-      color: t.series[3],
-      rates: r.rates.map((x) => x.nextWithPlan),
-      contracts: r.rates.map((x) => x.contracts.nextWithPlan),
-      source: `за ${r.quarter}`,
-      estimate: true,
-    },
-  ];
-  const describe = (s: (typeof series)[number], i: number): string => {
-    const n = s.contracts[i];
-    return `${s.estimate ? '≈ ' : ''}${formatInteger(n)} ${contractsWord(n)} ${s.source}`;
-  };
-  const extra = (s: (typeof series)[number], i: number): string => {
-    if (s !== series[2]) return '';
-    const parts = [];
-    const forecast = series[1].rates[i];
-    const target = s.rates[i];
-    if (forecast !== null && target !== null)
-      parts.push(`+${pctFormat.format(Math.max(0, target - forecast) * 100)} п.п.`);
-    if (r.rates[i].cappedWithPlan) parts.push('выше нельзя');
-    return parts.join(', ');
-  };
+  const forecast = r.rates.map((x) => x.next ?? 0);
+  const target = r.rates.map((x) => x.nextWithPlan ?? x.next ?? 0);
+  const gain = target.map((v, i) => Math.max(0, v - forecast[i]));
+  const points = (v: number): string => `+${pctFormat.format(v * 100)} п.п.`;
+  const contracts = (n: number): string =>
+    `≈ ${formatInteger(n)} ${contractsWord(n)} за ${r.quarter}`;
   return {
     option: {
       ...baseOption(t),
-      grid: { left: 8, right: 330, top: 64, bottom: 8, containLabel: true },
-      legend: { ...legend(t), orient: 'vertical' },
+      grid: { left: 8, right: 16, top: 44, bottom: 8, containLabel: true },
+      legend: legend(t),
       tooltip: {
         ...baseOption(t).tooltip,
         trigger: 'axis',
         axisPointer: { type: 'shadow' },
         formatter: (params: unknown) => {
-          const items = params as { dataIndex: number; seriesIndex: number; marker: string }[];
-          const i = items[0].dataIndex;
-          const lines = items.map((p) => {
-            const s = series[p.seriesIndex];
-            const gain = extra(s, i);
-            return `${p.marker}${s.name}: <b>${pct(s.rates[i])}</b> · ${describe(s, i)}${gain ? ` · ${gain}` : ''}`;
-          });
-          return [`<b>${r.rates[i].title}</b>`, ...lines].join('<br>');
+          const i = (params as { dataIndex: number }[])[0].dataIndex;
+          const x = r.rates[i];
+          return [
+            `<b>${x.title}</b>`,
+            `Прогноз ${r.nextQuarter}: <b>${pct(forecast[i])}</b> · ${contracts(x.contracts.next)}`,
+            `Цель: <b>${pct(target[i])}</b> · ${contracts(x.contracts.nextWithPlan)}`,
+            `Прирост: <b>${points(gain[i])}</b>${x.cappedWithPlan ? ' · выше нельзя' : ''}`,
+          ].join('<br>');
         },
       },
       xAxis: {
-        ...valueAxis(t, (v) => pct(v)),
-        max: (v: { max: number }) => Math.ceil(v.max * 10) / 10,
-      },
-      yAxis: {
         ...categoryAxis(
           t,
           r.rates.map((x) => x.title),
         ),
-        inverse: true,
         axisLabel: { color: t.textPrimary, fontSize: 13, fontWeight: 600 },
       },
-      series: series.map((s) => ({
-        type: 'bar' as const,
-        name: s.name,
-        data: s.rates,
-        barMaxWidth: 16,
-        barGap: '25%',
-        barCategoryGap: '28%',
-        itemStyle: { color: s.color, borderRadius: [0, RADIUS, RADIUS, 0] },
-        label: {
-          show: true,
-          position: 'right' as const,
-          formatter: (p: { dataIndex: number }) => {
-            const gain = extra(s, p.dataIndex);
-            return `{rate|${pct(s.rates[p.dataIndex])}}  {note|${describe(s, p.dataIndex)}}${gain ? `  {gain|${gain}}` : ''}`;
-          },
-          rich: {
-            rate: { color: t.textPrimary, fontSize: 12, fontWeight: 700 },
-            note: { color: t.textSecondary, fontSize: 12 },
-            gain: { color: t.textPrimary, fontSize: 12, fontWeight: 700 },
+      yAxis: valueAxis(t, (v) => pct(v)),
+      series: [
+        {
+          type: 'bar',
+          name: `Прогноз ${r.nextQuarter}`,
+          stack: 'rate',
+          data: forecast,
+          barMaxWidth: 48,
+          itemStyle: { color: t.sequential[1], borderColor: t.surface, borderWidth: 1 },
+          label: {
+            show: true,
+            position: 'insideTop',
+            color: t.textPrimary,
+            fontSize: 12,
+            fontWeight: 600,
+            formatter: (p) => pct(forecast[p.dataIndex]),
           },
         },
-      })),
+        {
+          type: 'bar',
+          name: 'Прирост в максимальном варианте',
+          stack: 'rate',
+          data: gain,
+          barMaxWidth: 48,
+          itemStyle: {
+            color: t.series[0],
+            borderColor: t.surface,
+            borderWidth: 1,
+            borderRadius: [RADIUS, RADIUS, 0, 0],
+          },
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (p) =>
+              `{gain|${points(gain[p.dataIndex])}}  {total|${pct(target[p.dataIndex])}}`,
+            rich: {
+              gain: { color: t.series[0], fontSize: 13, fontWeight: 700 },
+              total: { color: t.textPrimary, fontSize: 13, fontWeight: 700 },
+            },
+          },
+        },
+      ],
     },
     table: {
-      columns: ['Вид', ...series.flatMap((s) => [`${s.name}, % КВ`, `договоров ${s.source}`])],
+      columns: [
+        'Вид',
+        `Прогноз ${r.nextQuarter}`,
+        'Цель',
+        'Прирост',
+        `Договоров (прогноз)`,
+        `Договоров (цель)`,
+      ],
       rows: r.rates.map((x, i) => [
         x.title,
-        ...series.flatMap((s) => [pct(s.rates[i]), formatInteger(s.contracts[i])]),
+        pct(forecast[i]),
+        pct(target[i]),
+        points(gain[i]),
+        formatInteger(x.contracts.next),
+        formatInteger(x.contracts.nextWithPlan),
       ]),
     },
   };
